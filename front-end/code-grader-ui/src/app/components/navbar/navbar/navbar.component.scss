@@ -1,0 +1,13 @@
+.navbar-nav>li {
+    padding-left: 4rem;
+    padding-right: 4rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 991px){
+    .navbar-nav>li {
+        padding-left: 0;
+    }
+    
+}
