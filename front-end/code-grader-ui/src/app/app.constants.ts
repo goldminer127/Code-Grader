@@ -11,3 +11,6 @@ export enum WEB_PAGE_THEME {
     DARK_MODE = 'Dark Mode',
     LIGHT_MODE = 'Light Mode'
 }
+
+// Application Name
+export const APPLICATION_NAME = 'studentCode Grader'

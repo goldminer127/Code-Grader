@@ -2,39 +2,55 @@
     <app-navbar></app-navbar>
     <div class="row g-0">
         <app-about *ngIf="currentState === 'about'"></app-about>
-        <app-login *ngIf="currentState ==='login'"></app-login>
         <app-features *ngIf="currentState === 'features'"></app-features>
         <app-signup *ngIf="currentState === 'signup'"></app-signup>
-        
-        <div *ngIf="currentState === 'home'" class="d-none d-md-flex col-md-4 col-lg-5 bg-image" style=""></div>
-        <div *ngIf="currentState === 'home'" class="col-md-8 col-lg-6">
-            <div class="login d-flex py-5">
+
+        <div *ngIf="currentState === 'home' || currentState === 'login'"
+            class="d-none d-md-flex col-md-4 col-lg-5 bg-image"></div>
+
+        <div *ngIf="currentState === 'home' || currentState === 'login'"
+            class="col-md-8 col-lg-6 d-flex justify-content-center">
+
+            <div *ngIf="currentState === 'home' || currentState === 'login' " class="login d-flex py-5">
+
                 <div class="container">
                     <div class="row">
                         <div class="col-md-9 col-lg-8 mx-auto">
 
-                            <div class="landing-page-text">
-                                <h1 class="login-heading text-center mb-4">
-                                    studentCode Grader
-                                </h1>
-                                <h2 class="mb-4">
-                                    The best way to grade student code. Built for instructors.
-                                </h2>
-                                <h3 style="font-weight: 300; ">
-                                    Auto grader, code commenting, and other tools to help you give
-                                    amazing feedback, quickly.
-                                </h3>
-    
-                                <div class="col text-center">
-                                    <button type="button" class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mt-5" type="button">
-                                        Sign Up
-                                    </button>
+                            <div class="landing-page-text text-center align-items-center">
+
+                                <div *ngIf="currentState === 'home'" >
+                                    <h1 class="login-heading text-center mb-4">
+                                        {{ appname }}
+                                    </h1>
+                                    <hr style="border: 1px solid">
+                                    <h2 class="mb-4">
+                                        The best way to grade student code. Built for instructors.
+                                    </h2>
+                                    <h3 style="font-weight: 300; ">
+                                        Auto grader, code commenting, and other tools to help you give
+                                        amazing feedback, quickly.
+                                    </h3>
+
+                                    <div class="col text-center">
+                                        <button type="button"
+                                            class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mt-5"
+                                            type="button">
+                                            Sign Up
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="currentState === 'login'">
+                                    <app-login></app-login>
+                                </div>
+
+                                <div *ngIf="currentState === 'home'" class="footer-image col-md-3 col-7">
+                                    <img class="img-fluid" style="width:100%"
+                                        src="../../../../assets/images/footer-pic.png">
                                 </div>
                             </div>
 
-                            <div class="footer-image col-md-3 col-7">
-                                <img class="img-fluid" style="width:100%" src="../../../../assets/images/footer-pic.png" >
-                            </div>
                         </div>
                     </div>
                 </div>
