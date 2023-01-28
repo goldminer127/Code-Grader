@@ -11,7 +11,7 @@ export class LandingPageComponent implements OnInit {
   currentState : LANDING_PAGE_STATE = LANDING_PAGE_STATE.HOME;
 
   constructor(
-    public landingPageStorageService: LandingPageStorageService
+    private landingPageStorageService: LandingPageStorageService
   ){}
 
   ngOnInit(): void {
