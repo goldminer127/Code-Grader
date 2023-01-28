@@ -8,3 +8,6 @@ export enum LANDING_PAGE_STATE {
     DARK_MODE = 'darkmode',
     LIGHT_MODE = 'lightmode'
 }
+
+// Application Name
+export const APPLICATION_NAME = 'studentCode Grader'

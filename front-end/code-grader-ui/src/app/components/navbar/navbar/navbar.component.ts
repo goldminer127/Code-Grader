@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LANDING_PAGE_STATE } from 'src/app/app.constants';
+import { APPLICATION_NAME, LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/service
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit{
+  appname = APPLICATION_NAME;
 
   constructor(
     public landingPageStorageService: LandingPageStorageService
