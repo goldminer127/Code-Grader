@@ -33,7 +33,7 @@ jobs:
         run: |
           cd front-end
           cd code-grader-ui
-          npm i
+          npm i --legacy-peer-deps
       - name: Build
         run: |
           cd front-end
