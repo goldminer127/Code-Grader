@@ -14,6 +14,15 @@
     bottom: 0px;
 }
 
+@media only screen and (max-width: 991px){
+    .footer-image {
+        position: static;
+        margin-left: auto;
+        width: 100%;
+    }
+    
+}
+
 .login-heading {
     font-weight: 600;
 }
