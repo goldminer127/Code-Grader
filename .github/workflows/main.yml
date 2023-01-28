@@ -32,6 +32,8 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
+          cd frontend
+          cd code-grader-ui
           npm i
       - name: Build
         run: |
