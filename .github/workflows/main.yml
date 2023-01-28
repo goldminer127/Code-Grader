@@ -1,23 +1,48 @@
 name: Upload Website
-
-on:
+'on':
   push:
     branches:
-    - master
-
+      - main
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 10.x
+          - 12.x
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-    - name: Deploy static site to S3 bucket
-      run: aws s3 sync ./public/ s3://code-grader-ui --delete
+      - uses: actions/checkout@v2
+      - name: 'Use Node.js ${{ matrix.node-version }}'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - name: Cache node modules
+        id: cache-nodemodules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: >-
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{
+            hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install Dependencies
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+      - name: Build
+        run: |
+          npm run build -- --prod
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+          aws-secret-access-key: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+          aws-region: us-east-1
+      - name: Deploy static site to S3 bucket
+        run: 'aws s3 sync ./dist/ s3://code-grader-ui --delete'
