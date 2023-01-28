@@ -5,8 +5,11 @@ export enum LANDING_PAGE_STATE {
     SIGN_UP = 'signup',
     ABOUT = 'about',
     FEATURES = 'features',
-    DARK_MODE = 'darkmode',
-    LIGHT_MODE = 'lightmode'
+}
+
+export enum WEB_PAGE_THEME {
+    DARK_MODE = 'Dark Mode',
+    LIGHT_MODE = 'Light Mode'
 }
 
 // Application Name

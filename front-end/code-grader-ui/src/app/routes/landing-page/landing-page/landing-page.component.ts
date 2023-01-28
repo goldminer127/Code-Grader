@@ -12,7 +12,7 @@ export class LandingPageComponent implements OnInit {
   appname = APPLICATION_NAME;
 
   constructor(
-    public landingPageStorageService: LandingPageStorageService
+    private landingPageStorageService: LandingPageStorageService
   ){}
 
   ngOnInit(): void {
