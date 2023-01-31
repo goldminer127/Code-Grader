@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DarkModeService } from 'angular-dark-mode';
 import { Observable } from 'rxjs';
-import { APPLICATION_NAME,LANDING_PAGE_STATE, WEB_PAGE_THEME } from 'src/app/app.constants';
+import { LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   toggleValue = WEB_PAGE_THEME.DARK_MODE;
   navbarState = 'landing-page';
   appname = APPLICATION_NAME;
+  darkMode = true;
 
   constructor(
     private landingPageStorageService: LandingPageStorageService,
@@ -35,16 +36,16 @@ export class NavbarComponent implements OnInit {
 
     if(darkModeVal){
       this.darkModeService.enable()
-      this.toggleValue = WEB_PAGE_THEME.LIGHT_MODE;
+      this.darkMode = false;
     }else{
-      this.toggleValue = WEB_PAGE_THEME.DARK_MODE;
+      this.darkMode = true;
       this.darkModeService.disable();
     }
   }
 
   onToggle(): void {
     this.darkModeService.toggle();
-    this.toggleValue = this.toggleValue === WEB_PAGE_THEME.DARK_MODE ? WEB_PAGE_THEME.LIGHT_MODE : WEB_PAGE_THEME.DARK_MODE;
+    this.darkMode = !this.darkMode;
   }
 
   onNavbarClick(state: string): void {
