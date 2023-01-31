@@ -10,7 +10,6 @@ import { AboutComponent } from './components/about/about.component';
 import { LoginComponent } from './components/login/login.component';
 import { FeaturesComponent } from './components/features/features.component';
 import { SignupComponent } from './components/signup/signup.component';
-import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +19,7 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
     AboutComponent,
     LoginComponent,
     FeaturesComponent,
-    SignupComponent,
-    UserSettingsComponent
+    SignupComponent
   ],
   imports: [
     BrowserModule,
