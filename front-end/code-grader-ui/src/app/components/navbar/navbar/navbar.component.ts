@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
 
   darkMode$: Observable<boolean> = this.darkModeService.darkMode$;
   toggleValue = WEB_PAGE_THEME.DARK_MODE;
+  navbarState = 'landing-page';
   appname = APPLICATION_NAME;
 
   constructor(
