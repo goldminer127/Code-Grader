@@ -12,6 +12,9 @@ import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/service
 export class NavbarComponent implements OnInit {
 
   darkMode$: Observable<boolean> = this.darkModeService.darkMode$;
+  toggleValue = WEB_PAGE_THEME.DARK_MODE;
+  navbarState = 'landing-page';
+  appname = APPLICATION_NAME;
   darkMode = true;
 
   constructor(
