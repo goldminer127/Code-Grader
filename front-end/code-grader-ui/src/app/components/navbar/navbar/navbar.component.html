@@ -1,7 +1,8 @@
-<nav class="navbar navbar-expand-lg" [ngClass]="toggleValue === 'Dark Mode' ? 'navbar-light bg-light' : 'navbar-dark bg-dark'">
+<nav class="navbar navbar-expand-lg" [ngClass]="darkMode ? 'navbar-light bg-light' : 'navbar-dark bg-dark'">
     <div class="container-fluid">
         <a (click)="onNavbarClick('home')" class="navbar-brand mb-1" style="font-weight: 600; cursor: pointer" >
-            <img src="../../../../assets/images/scg-logo.png" width="30" height="24" >
+            <img *ngIf="darkMode" src="../../../../assets/images/scg-logo.png" width="30" height="24" >
+            <img *ngIf="!darkMode" src="../../../../assets/images/scg-logo-dark-mode.png" width="30" height="24" >
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,9 +21,9 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link " (click)="onToggle()">
-                        <img *ngIf="toggleValue === 'Dark Mode'" src="../../../../assets/images/dark_mode.png" alt="" width="30" height="24">
-                        <img *ngIf="toggleValue === 'Light Mode'" src="../../../../assets/images/lightmode.png" alt="" width="30" height="24">
-                        {{ toggleValue }}
+                        <img *ngIf="darkMode" src="../../../../assets/images/dark_mode.png" alt="" width="30" height="24">
+                        <img *ngIf="!darkMode" src="../../../../assets/images/lightmode.png" alt="" width="30" height="24">
+                        {{ darkMode ? "Dark Mode" : "Light Mode" }}
                     </a>
                 </li>
                 <li class="nav-item">
