@@ -2,15 +2,14 @@
     <div class="row g-0">
         <app-about *ngIf="currentState === 'about'"></app-about>
         <app-features *ngIf="currentState === 'features'"></app-features>
-        <app-signup *ngIf="currentState === 'signup'"></app-signup>
 
-        <div *ngIf="currentState === 'home' || currentState === 'login'"
+        <div
             class="d-none d-md-flex col-md-4 col-lg-5 bg-image"></div>
 
-        <div *ngIf="currentState === 'home' || currentState === 'login'"
+        <div
             class="col-md-8 col-lg-6 d-flex justify-content-center">
 
-            <div *ngIf="currentState === 'home' || currentState === 'login' " class="login d-flex py-5">
+            <div class="login d-flex py-5">
 
                 <div class="container">
                     <div class="row">
@@ -34,7 +33,9 @@
                                     <div class="col text-center">
                                         <button type="button"
                                             class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mt-5"
-                                            type="button">
+                                            type="button"
+                                            (click)="onSignUpClick()"
+                                            >
                                             Sign Up
                                         </button>
                                     </div>
@@ -42,6 +43,10 @@
 
                                 <div *ngIf="currentState === 'login'">
                                     <app-login></app-login>
+                                </div>
+
+                                <div *ngIf="currentState === 'signup'">
+                                    <app-signup></app-signup>
                                 </div>
 
                                 <div *ngIf="currentState === 'home'" class="footer-image col-md-3 col-7">
