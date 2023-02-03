@@ -1,1 +1,99 @@
-<p>signup works!</p>
+<form [formGroup]="signUpForm" (ngSubmit)="signUpFormSubmit()">
+    <h1 class="text-center mb-2">
+        {{ appname }}
+    </h1>
+
+    <hr style="border: 1px solid" class="mb-3">
+
+    <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign Up</h3>
+
+    <div class="form-floating mb-2">
+        <input 
+            formControlName="username" 
+            type="text" 
+            class="form-control" 
+            id="floatingInputUsername"
+            [ngClass]="signUpForm.hasError('minlength', 'username') || signUpForm.hasError('pattern', 'username') || signUpForm.hasError('maxlength', 'username') ? 'error-input' : ''"
+            pattern="^(?=[a-zA-Z0-9._]{8,15}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+            required 
+            autofocus>
+        <label for="floatingInputUsername">Username*</label>
+    </div>
+
+    <div *ngIf="signUpForm.hasError('minlength', 'username') || signUpForm.hasError('pattern', 'username') || signUpForm.hasError('maxlength', 'username')"
+        class="text-muted mb-2">
+        Username must be between 8-15 characters and contain no special characters
+    </div>
+
+    <div class="form-floating mb-2">
+        <input formControlName="email" type="email" class="form-control" id="floatingInputEmail"
+            [ngClass]="signUpForm.hasError('email', 'email') ? 'error-input' : ''" required>
+        <label for="floatingInputEmail">Email address*</label>
+    </div>
+
+    <div *ngIf="signUpForm.hasError('email', 'email')" class="text-muted mb-2">
+        Must be a valid email address
+    </div>
+
+    <hr>
+
+    <div class="form-floating mb-2">
+        <input formControlName="firstName" type="text" class="form-control" id="floatingInputFirstName"
+            [ngClass]="signUpForm.hasError('minlength', 'firstName') || signUpForm.hasError('maxlength', 'firstName') ? 'error-input' : ''"
+            required>
+        <label for="floatingInputFirstName">First Name*</label>
+    </div>
+
+    <div *ngIf="signUpForm.hasError('minlength', 'firstName') || signUpForm.hasError('maxlength', 'firstName')"
+        class="text-muted mb-2">
+        First name must be between 2 - 50 characters
+    </div>
+
+    <div class="form-floating mb-2">
+        <input formControlName="lastName" type="text" class="form-control" id="floatingInputLastName"
+            [ngClass]="signUpForm.hasError('minlength', 'lastName') || signUpForm.hasError('maxlength', 'lastName') ? 'error-input' : ''"
+            required>
+        <label for="floatingInputLastName">Last Name*</label>
+    </div>
+
+    <div *ngIf="signUpForm.hasError('minlength', 'lastName') || signUpForm.hasError('maxlength', 'lastName')"
+        class="text-muted mb-2">
+        Last name must be between 2 - 50 characters
+    </div>
+
+    <hr>
+
+    <form [formGroup]="passwords" (ngSubmit)="signUpFormSubmit()">
+        <div class="form-floating mb-2">
+            <input formControlName="password"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" type="password"
+                class="form-control" id="floatingPassword"
+                [ngClass]="passwords.hasError('pattern', 'password') ? 'error-input' : ''" required>
+            <label for="floatingPassword">Password*</label>
+        </div>
+
+        <div *ngIf="passwords.hasError('pattern', 'password')" class="text-muted mb-2">
+            Use 8 or more characters, at least one uppercase letter, one lowercase letter, one number and one special
+            character
+        </div>
+
+        <div class="form-floating mb-3">
+            <input formControlName="confirmPassword" type="password" class="form-control" id="floatingPasswordConfirm"
+                required [ngClass]="passwords.hasError('passMismatch') ? 'error-input' : ''">
+            <label for="floatingPasswordConfirm">Confirm Password*</label>
+        </div>
+
+        <div *ngIf="passwords.hasError('passMismatch')" class="text-muted mb-3">
+            Passwords do not match
+        </div>
+
+    </form>
+
+    <div class="d-grid mb-2">
+        <button [disabled]="!checkForms()" class="btn btn-lg btn-primary btn-login fw-bold text-uppercase"
+            type="submit">Register</button>
+    </div>
+
+    <a class="d-block text-center mt-2 small" (click)="onSignInClick()" style="cursor: pointer">Have an account? Sign In</a>
+
+</form>
