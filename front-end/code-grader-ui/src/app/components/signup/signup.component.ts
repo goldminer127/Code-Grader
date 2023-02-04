@@ -1,19 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { APPLICATION_NAME, LANDING_PAGE_STATE } from 'src/app/app.constants';
+import { IUser } from 'src/app/app.model';
+import { CognitoService } from 'src/app/services/cognito.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { UserStorageService, USER_STORAGE } from 'src/app/services/user-storage.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   appname = APPLICATION_NAME;
+  isLoading = false;
+  emailAlreadyExist = false;
+  errorMessage = null;
 
   constructor(
-    private landingPageStorageService: LandingPageStorageService
-  ){}
+    private landingPageStorageService: LandingPageStorageService,
+    private cognitoService: CognitoService,
+    private userStorageService: UserStorageService
+  ) { }
+
+
+  ngOnInit(): void {
+    this.signUpForm.get('email')?.valueChanges.subscribe(()=> {
+      this.emailAlreadyExist = false;
+    })
+  }
 
   checkPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
     const pass = group.get('password')?.value;
@@ -23,7 +38,6 @@ export class SignupComponent {
   }
 
   signUpForm = new FormGroup({
-    username: new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(15)]),
     email: new FormControl(null, Validators.email),
     firstName: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
     lastName: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
@@ -36,8 +50,40 @@ export class SignupComponent {
 
 
   signUpFormSubmit(): void {
-    // console.log("sign up ", this.signUpForm)
-    // console.log("pw ", this.passwords)
+    const signUpUser: IUser = {
+      email: this.signUpForm.value.email!,
+      firstName: this.signUpForm.value.firstName!,
+      lastName: this.signUpForm.value.lastName!,
+      password: this.passwords.value.password!
+    }
+
+    this.errorMessage = null;
+    this.isLoading = true;
+
+    this.cognitoService.signUp(signUpUser).subscribe(() => {
+      this.isLoading = false;
+
+      this.userStorageService.set$(
+        USER_STORAGE.USER,
+        signUpUser
+      )
+
+      this.landingPageStorageService.set$(
+        LANDING_PAGE_STORAGE.currentState,
+        LANDING_PAGE_STATE.CONFIRM_SIGN_UP
+      )
+    },
+      err => {
+
+        if(err.code === 'UsernameExistsException'){
+          this.emailAlreadyExist = true;
+        }else{
+          this.errorMessage = err.message;
+        }
+
+        this.isLoading = false;
+      }
+    )
   }
 
   checkForms(): boolean {

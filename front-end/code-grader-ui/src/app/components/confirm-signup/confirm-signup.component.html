@@ -1,0 +1,52 @@
+<div class="container">
+    <h1 class="text-center mb-2">
+        {{ appname }}
+    </h1>
+
+    <hr style="border: 1px solid" class="mb-3">
+
+    <h2 class="fw-normal mb-3 pb-3" [ngClass]="successConfirm ? 'text-success' : ''">
+        {{ successConfirm ? "Successfully Confirmed Email." : "Confirm your email"}}
+    </h2>
+
+    <h3 *ngIf="successConfirm">
+        Redirecting you to login....
+    </h3>
+
+    <div *ngIf="!successConfirm">
+        <form class="form-inline">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="confirmationCode" class="sr-only">Confirmation Code</label>
+                <input type="text" name="confirmationCode" [(ngModel)]="confirmationCode" class="form-control"
+                    id="confirmationCode" placeholder="Code">
+            </div>
+            <button type="submit" (click)="onConfirm()" class="btn btn-primary mb-2">
+                {{ isLoading ? '' : 'Confirm Email' }}
+                <div *ngIf="isLoading">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </div>
+            </button>
+            <div *ngIf="errorMessage" class="my-2 text-danger">
+                ERROR: {{ errorMessage}}
+            </div>
+        </form>
+
+        <hr>
+
+        <h3 class="fw-normal mb-3 pb-3">Need a new confirmation code?</h3>
+        <button type="button" [disabled]="disableResend" (click)="resendCode()" class="btn btn-primary">
+            {{ isLoadingResend ? '' : 'Send new code' }}
+            <div *ngIf="isLoadingResend">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </div>
+        </button>
+        <div *ngIf="errorMessageResend" class="my-2 text-danger">
+            ERROR: {{ errorMessageResend }}
+        </div>
+        <div *ngIf="successMessageResend" class="my-2 text-success">
+            Success: New Confirmation Code has been sent.
+        </div>
+    </div>
+</div>
