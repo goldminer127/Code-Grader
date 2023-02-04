@@ -14,6 +14,9 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CognitoService } from './services/cognito.service';
+import { ConfirmSignupComponent } from './components/confirm-signup/confirm-signup.component';
+import { UserStorageService } from './services/user-storage.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     FeaturesComponent,
     SignupComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    ConfirmSignupComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
   ],
   providers: [
-    LandingPageStorageService
+    LandingPageStorageService,
+    CognitoService,
+    UserStorageService
   ],
   bootstrap: [AppComponent]
 })

@@ -49,6 +49,10 @@
                                     <app-signup></app-signup>
                                 </div>
 
+                                <div *ngIf="currentState === 'confirmSignUp'">
+                                    <app-confirm-signup></app-confirm-signup>
+                                </div>
+
                                 <div *ngIf="currentState === 'home'" class="footer-image col-md-3 col-7">
                                     <img class="img-fluid" style="width:100%"
                                         src="../../../../assets/images/footer-pic.png">
