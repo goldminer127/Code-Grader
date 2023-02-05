@@ -5,6 +5,7 @@ export enum LANDING_PAGE_STATE {
     SIGN_UP = 'signup',
     ABOUT = 'about',
     FEATURES = 'features',
+    CONFIRM_SIGN_UP = 'confirmSignUp'
 }
 
 export enum WEB_PAGE_THEME {

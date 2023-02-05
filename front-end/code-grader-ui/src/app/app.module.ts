@@ -11,6 +11,12 @@ import { LoginComponent } from './components/login/login.component';
 import { FeaturesComponent } from './components/features/features.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CognitoService } from './services/cognito.service';
+import { ConfirmSignupComponent } from './components/confirm-signup/confirm-signup.component';
+import { UserStorageService } from './services/user-storage.service';
 
 @NgModule({
   declarations: [
@@ -21,14 +27,20 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
     LoginComponent,
     FeaturesComponent,
     SignupComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    ConfirmSignupComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
-    LandingPageStorageService
+    LandingPageStorageService,
+    CognitoService,
+    UserStorageService
   ],
   bootstrap: [AppComponent]
 })
