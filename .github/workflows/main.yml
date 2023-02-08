@@ -50,4 +50,4 @@ jobs:
           cd front-end
           cd code-grader-ui
           cd dist
-          aws s3 sync ./code-grader-ui/ s3://code-grader-ui --delete
+          aws s3 sync ./code-grader-ui/ s3://studentcodegrader.com --delete
