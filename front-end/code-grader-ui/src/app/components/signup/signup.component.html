@@ -50,7 +50,7 @@
     <form [formGroup]="passwords" (ngSubmit)="signUpFormSubmit()">
         <div class="form-floating mb-2">
             <input formControlName="password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" type="password"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$" type="password"
                 class="form-control" id="floatingPassword"
                 [ngClass]="passwords.hasError('pattern', 'password') ? 'error-input' : ''" required>
             <label for="floatingPassword">Password*</label>
