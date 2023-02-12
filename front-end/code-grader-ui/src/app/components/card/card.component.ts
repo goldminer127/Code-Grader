@@ -11,7 +11,7 @@ export class CardComponent implements OnInit {
   @Input() mainBody: string | undefined;
   @Input() footer: string | undefined;
 
-  darkMode : boolean = false;
+  darkMode  = false;
 
   constructor(
     private darkModeService: DarkModeService
