@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CognitoService } from './services/cognito.service';
 import { ConfirmSignupComponent } from './components/confirm-signup/confirm-signup.component';
 import { UserStorageService } from './services/user-storage.service';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { UserStorageService } from './services/user-storage.service';
     FeaturesComponent,
     SignupComponent,
     UserSettingsComponent,
-    ConfirmSignupComponent
+    ConfirmSignupComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,

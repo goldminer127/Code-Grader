@@ -1,1 +1,179 @@
-<p>features works!</p>
+<div class="container-fluid" #featureContainer [ngClass]="{'light-mode-container': !darkMode}">
+    <h1 class="text-center pt-5 text-decoration-underline">
+        Features
+    </h1>
+
+    <div class="row py-5">
+
+        <div class="col-md-6 offset-md-1">
+            <h2 class="text-center" *ngIf=" viewportWidth > mobileWidthBootstrap">
+                Students
+            </h2>
+            <div class="text-center" *ngIf="viewportWidth <= mobileWidthBootstrap ">
+                <button class="navbar-toggler" (click)="studentFeaturesClick()" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#studentFeaturesContent">
+                    <h2>Students</h2>
+                    <svg *ngIf="!studentFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z" />
+                    </svg>
+                    <svg *ngIf="studentFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z" />
+                    </svg>
+                </button>
+            </div>
+
+
+            <div class="container-fluid" [ngClass]="viewportWidth <= mobileWidthBootstrap ? 'collapse' : ''"
+                #studentFeaturesContent id="studentFeaturesContent">
+                <div class="row pt-4">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+
+                <div class="row pb-3">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-5 d-flex justify-content-end">
+            <img src="../../../assets/images/features_student_image.png" class="img-fluid pt-5 mt-5 d-none d-md-block"
+                alt="Picture of man grabbing star">
+        </div>
+
+    </div>
+
+    <div class="row py-5">
+
+        <div class="col-md-5 d-flex justify-content-start">
+            <img src="../../../assets/images/features_grader_image.png" class="img-fluid pt-5 mt-5 d-none d-md-block"
+                alt="Two people looking at a computer">
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="text-center" *ngIf=" viewportWidth > mobileWidthBootstrap">
+                Graders
+            </h2>
+
+            <div class="text-center" *ngIf="viewportWidth <= mobileWidthBootstrap ">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#gradersFeaturesContent">
+                    <h2>Graders</h2>
+                    <svg *ngIf="!graderFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z" />
+                    </svg>
+                    <svg *ngIf="graderFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="container-fluid" [ngClass]="viewportWidth <= mobileWidthBootstrap ? 'collapse' : '' "
+                #gradersFeaturesContent id="gradersFeaturesContent">
+                <div class="row pt-4">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+
+                <div class="row pb-3">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row pt-5">
+
+        <div class="col-md-6 offset-md-1">
+            <h2 class="text-center" *ngIf="viewportWidth > mobileWidthBootstrap">
+                Instructors
+            </h2>
+            <div class="text-center" *ngIf="viewportWidth <= mobileWidthBootstrap ">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#instructorsFeaturesContent">
+                    <h2>Instructors</h2>
+                    <svg *ngIf="!instructorFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z" />
+                    </svg>
+                    <svg *ngIf="instructorFeaturesArrowUp" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
+                        <path
+                            d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="container-fluid" [ngClass]="viewportWidth <= mobileWidthBootstrap ? 'collapse' : '' "
+                #instructorsFeaturesContent id="instructorsFeaturesContent">
+                <div class="row pt-4">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+
+                <div class="row pb-3">
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                    <div class="col-sm-6 py-2">
+                        <app-card [title]="'Feature 1'" [mainBody]="'Lots of words here. Yes words!'"
+                            [footer]="'footer text'"></app-card>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-5 d-flex justify-content-end">
+            <img src="../../../assets/images/features_instructors_image.png" class="img-fluid pt-5 mt-5"
+                alt="Man working at his desk">
+        </div>
+
+    </div>
+
+</div>
