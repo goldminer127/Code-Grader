@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Amplify, Auth } from 'aws-amplify';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, tap } from 'rxjs';
 
 import { environment } from 'src/environments/environments';
 import { IUser } from '../app.model';
@@ -36,11 +36,12 @@ export class CognitoService {
   }
 
   //TODO convert to observable
-  public signIn(user: IUser): Promise<any> {
-    return Auth.signIn(user.email, user.password)
-      .then(() => {
+  public signIn(email: string, password: string): Observable<any> {
+    return from(Auth.signIn(email, password)).pipe(
+      tap(()=> {
         this.authenticationSubject.next(true);
-      });
+      })
+    )
   }
 
   public resendCode(email: string): Observable<any> {
