@@ -20,4 +20,11 @@ export class LoginComponent {
       LANDING_PAGE_STATE.SIGN_UP
     )
   }
+
+  onForgotPasswordClick(): void {
+    this.landingPageStorageService.set$(
+      LANDING_PAGE_STORAGE.currentState,
+      LANDING_PAGE_STATE.FORGOT_PASSWORD 
+    )
+  }
 }
