@@ -18,6 +18,7 @@ import { CognitoService } from './services/cognito.service';
 import { ConfirmSignupComponent } from './components/confirm-signup/confirm-signup.component';
 import { UserStorageService } from './services/user-storage.service';
 import { CardComponent } from './components/card/card.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { CardComponent } from './components/card/card.component';
     SignupComponent,
     UserSettingsComponent,
     ConfirmSignupComponent,
-    CardComponent
+    CardComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
