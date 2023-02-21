@@ -35,8 +35,13 @@ export class LoginComponent {
     )
   }
 
+  onForgotPasswordClick(): void {
+    this.landingPageStorageService.set$(
+      LANDING_PAGE_STORAGE.currentState,
+      LANDING_PAGE_STATE.FORGOT_PASSWORD 
+    )
+  }
   onSubmit(): void {
-    console.log("submit ", this.loginForm)
     this.isLoading = true;
 
     this.cognitoService.signIn(this.loginForm.value.email!, this.loginForm.value.password!).subscribe(() => {

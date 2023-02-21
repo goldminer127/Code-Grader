@@ -87,4 +87,12 @@ export class CognitoService {
       });
   }
 
+  public forgotPassword(username: string): Observable<any> {
+    return from(Auth.forgotPassword(username));
+  }
+
+  public forgotPasswordSubmit(username: string, code: string, newPassword: string) : Observable<any> {
+    return from(Auth.forgotPasswordSubmit(username, code, newPassword));
+  }
+
 }
