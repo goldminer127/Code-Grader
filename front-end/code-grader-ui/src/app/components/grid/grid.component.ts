@@ -17,7 +17,7 @@ export class GridComponent implements OnInit {
   @Output() gridReadyEvent = new EventEmitter<any>();
   @Output() cellClickedEvent = new EventEmitter<any>();
 
-  gridTheme : string = 'ag-theme-alpine';
+  gridTheme  = 'ag-theme-alpine';
 
   constructor(
     private darkModeService: DarkModeService

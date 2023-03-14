@@ -17,3 +17,10 @@ export enum WEB_PAGE_THEME {
 
 // Application Name
 export const APPLICATION_NAME = 'studentCode Grader'
+
+export enum PILLS {
+    INSTRUCTOR = 'instructor',
+    GRADER = 'grader',
+    STUDENT = 'student',
+    ALL = 'all'
+}

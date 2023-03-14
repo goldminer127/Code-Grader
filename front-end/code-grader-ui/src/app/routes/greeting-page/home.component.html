@@ -1,1 +1,27 @@
-<p>home works!</p>
+<ul class="nav nav-pills nav-fill">
+    <li class="nav-item px-3 py-3">
+        <a class="nav-link" (click)="onPillClick('instructor')"
+            [ngClass]="activePill === 'instructor' ? 'active' : ''">Instructor</a>
+    </li>
+    <li class="nav-item px-3 py-3">
+        <a class="nav-link" (click)="onPillClick('grader')"
+            [ngClass]="activePill === 'grader' ? 'active' : ''">Grader</a>
+    </li>
+    <li class="nav-item px-3 py-3">
+        <a class="nav-link" (click)="onPillClick('student')"
+            [ngClass]="activePill === 'student' ? 'active' : ''">Student</a>
+    </li>
+    <li class="nav-item px-3 py-3">
+        <a class="nav-link" (click)="onPillClick('all')" [ngClass]="activePill === 'all' ? 'active' : ''">All</a>
+    </li>
+</ul>
+
+<div style="height: 80vh; width: 100%">
+    <app-grid
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [rowData$]="rowData$"
+        (gridReadyEvent)="onGridReady($event)"
+        (cellClickedEvent)="onCellClicked($event)"
+    ></app-grid>
+</div>
