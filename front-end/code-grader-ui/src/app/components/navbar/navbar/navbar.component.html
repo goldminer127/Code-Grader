@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg" [ngClass]="darkMode ? 'navbar-light bg-light' : 'navbar-dark bg-dark'">
     <div class="container-fluid">
-        <a (click)="onNavbarClick('home')" class="navbar-brand mb-1" style="font-weight: 600; cursor: pointer" >
+        <a (click)="navbarState !== 'home' ? onNavbarClick('default') : ''" class="navbar-brand mb-1" style="font-weight: 600; cursor: pointer" >
             <img *ngIf="darkMode" src="../../../../assets/images/scg-logo.png" width="30" height="24" >
             <img *ngIf="!darkMode" src="../../../../assets/images/scg-logo-dark-mode.png" width="30" height="24" >
         </a>
@@ -10,12 +10,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link " (click)="onNavbarClick('login')">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" (click)="onNavbarClick('signup')">Sign Up</a>
-                </li>
+                <ng-container *ngIf="navbarState !== 'home'">
+                    <li class="nav-item">
+                        <a class="nav-link " (click)="onNavbarClick('login')">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="onNavbarClick('signup')">Sign Up</a>
+                    </li>
+                </ng-container>
             </ul>
 
             <ul class="navbar-nav mb-2 mb-lg-0">
@@ -26,12 +28,24 @@
                         {{ darkMode ? "Dark Mode" : "Light Mode" }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" (click)="onNavbarClick('about')">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" (click)="onNavbarClick('features')">Features</a>
-                </li>
+                <ng-container *ngIf="navbarState !== 'home'">
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="onNavbarClick('about')">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="onNavbarClick('features')">Features</a>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf="navbarState === 'home'">
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="signOutClick()">Sign Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <i class="bi bi-gear-fill"></i>
+                        </a>
+                    </li>
+                </ng-container>
             </ul>
         </div>
     </div>

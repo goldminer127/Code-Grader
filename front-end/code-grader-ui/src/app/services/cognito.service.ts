@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Amplify, Auth } from 'aws-amplify';
-import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, Observable, of, tap } from 'rxjs';
 
 import { environment } from 'src/environments/environments';
 import { IUser } from '../app.model';
@@ -35,7 +35,6 @@ export class CognitoService {
     return from(Auth.confirmSignUp(user.email, code));
   }
 
-  //TODO convert to observable
   public signIn(email: string, password: string): Observable<any> {
     return from(Auth.signIn(email, password)).pipe(
       tap(()=> {
@@ -48,35 +47,27 @@ export class CognitoService {
     return from(Auth.resendSignUp(email));
   }
 
-  //TODO convert to observable
-  public signOut(): Promise<any> {
-    return Auth.signOut()
-      .then(() => {
+  public signOut(): Observable<any> {
+    return from(Auth.signOut()).pipe(
+      tap(()=>{
         this.authenticationSubject.next(false);
-      });
+      })
+    )
   }
 
-  //TODO convert to observable
-  public isAuthenticated(): Promise<boolean> {
+  public isAuthenticated(): Observable<boolean> {
     if (this.authenticationSubject.value) {
-      return Promise.resolve(true);
+      return of(true);
     } else {
-      return this.getUser()
-        .then((user: any) => {
-          if (user) {
-            return true;
-          } else {
-            return false;
-          }
-        }).catch(() => {
-          return false;
-        });
+      return this.getUser().pipe(
+        map((user: any)=> user ? true : false),
+        catchError(()=> of(false))
+      )
     }
   }
 
-  //TODO convert to observable
-  public getUser(): Promise<any> {
-    return Auth.currentUserInfo();
+  public getUser(): Observable<any> {
+    return from(Auth.currentUserInfo());
   }
 
   //TODO convert to observable

@@ -19,6 +19,7 @@ import { ConfirmSignupComponent } from './components/confirm-signup/confirm-sign
 import { UserStorageService } from './services/user-storage.service';
 import { CardComponent } from './components/card/card.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { HomeComponent } from './routes/greeting-page/home.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     UserSettingsComponent,
     ConfirmSignupComponent,
     CardComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

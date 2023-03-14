@@ -1,6 +1,7 @@
 // Landing Page State Values
 export enum LANDING_PAGE_STATE {
     HOME = 'home',
+    DEFAULT = 'default',
     LOGIN = 'login',
     SIGN_UP = 'signup',
     ABOUT = 'about',

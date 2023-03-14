@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { APPLICATION_NAME, LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
@@ -20,7 +21,8 @@ export class LoginComponent {
   constructor(
     private landingPageStorageService: LandingPageStorageService,
     private cognitoService: CognitoService,
-    private userStorageService: UserStorageService
+    private userStorageService: UserStorageService,
+    private router: Router
   ) { }
 
   loginForm = new FormGroup({
@@ -38,14 +40,16 @@ export class LoginComponent {
   onForgotPasswordClick(): void {
     this.landingPageStorageService.set$(
       LANDING_PAGE_STORAGE.currentState,
-      LANDING_PAGE_STATE.FORGOT_PASSWORD 
+      LANDING_PAGE_STATE.FORGOT_PASSWORD
     )
   }
   onSubmit(): void {
     this.isLoading = true;
+    this.errorMessage = null;
 
     this.cognitoService.signIn(this.loginForm.value.email!, this.loginForm.value.password!).subscribe(() => {
       this.success = true;
+      this.redirectToHome()
     },
       err => {
         if (err.code === 'UserNotConfirmedException') {
@@ -56,9 +60,15 @@ export class LoginComponent {
           this.errorMessage = err.message;
           this.isLoading = false;
         }
-      }
-
+      },
     )
+
+  }
+
+  redirectToHome(): void {
+    setTimeout(()=> {
+      this.router.navigate(['/home']);
+    },3000 )
   }
 
   redirectConfirmEmail(): void {
