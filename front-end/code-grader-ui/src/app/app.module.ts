@@ -20,6 +20,9 @@ import { UserStorageService } from './services/user-storage.service';
 import { CardComponent } from './components/card/card.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { HomeComponent } from './routes/greeting-page/home.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { HttpClientModule } from  '@angular/common/http';
+import { GridComponent } from './components/grid/grid.component';
 
 @NgModule({
   declarations: [
@@ -34,14 +37,17 @@ import { HomeComponent } from './routes/greeting-page/home.component';
     ConfirmSignupComponent,
     CardComponent,
     ForgotPasswordComponent,
-    HomeComponent
+    HomeComponent,
+    GridComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AgGridModule,
+    HttpClientModule
   ],
   providers: [
     LandingPageStorageService,
