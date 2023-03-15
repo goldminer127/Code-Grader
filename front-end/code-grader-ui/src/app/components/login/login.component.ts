@@ -66,9 +66,9 @@ export class LoginComponent {
   }
 
   redirectToHome(): void {
-    setTimeout(()=> {
+    setTimeout(() => {
       this.router.navigate(['/home']);
-    },3000 )
+    }, 3000)
   }
 
   redirectConfirmEmail(): void {

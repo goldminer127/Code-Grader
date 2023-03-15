@@ -3,11 +3,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
 import { IUser } from 'src/app/app.model';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -23,9 +24,9 @@ export class HomeComponent implements OnInit {
 
   // Each Column Definition results in one Column.
   public columnDefs: ColDef[] = [
-    { field: 'make', headerName: "Class Name" },
-    { field: 'model', headerName: "Role" },
-    { field: 'price', headerName: 'View Details' },
+    { field: 'class_name', headerName: "Class Name" },
+    { field: 'role_name', headerName: "Role" },
+    { field: '', headerName: 'View Details' },
     { headerName: 'Enter Class' }
   ];
 
@@ -42,7 +43,8 @@ export class HomeComponent implements OnInit {
     private landingPageStorageService: LandingPageStorageService,
     private cognitoService: CognitoService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private userService: UserService
   ) {
     this.user = {} as IUser;
   }
@@ -56,8 +58,14 @@ export class HomeComponent implements OnInit {
         );
 
         this.cognitoService.getUser().subscribe((user: any) => {
-          this.user = user.attributes;
-        })
+          if (user.attributes) {
+            this.user = user.attributes;
+          } else {
+            this.router.navigate([''])
+          }
+        },
+          err => console.log("Err ", err)
+        )
       } else {
         this.router.navigate(['']);
       }
@@ -66,7 +74,6 @@ export class HomeComponent implements OnInit {
 
   onGridReady(params: GridReadyEvent) {
     this.refreshData();
-    console.log("params ", params)
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
 
@@ -88,9 +95,21 @@ export class HomeComponent implements OnInit {
   }
 
   refreshData(): void {
-    console.log("fetch ")
+    this.rowData$ =
+      this.userService.getUserInfo(this.user.email).pipe(
+        switchMap((resp: any) => {
+          return this.http
+            .get<any[]>(`http://localhost:3000/class/${resp.message.userInfo.user_id}`).pipe(
+              map((data:any )=> {
+                const results = this.activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
+                                : this.activePill === PILLS.GRADER ? data.message.graderClasses
+                                : this.activePill === PILLS.INSTRUCTOR ? data.message.instructorClasses
+                                : data.message.studentClasses
+                return results;
+              })
+            );
+        })
+      )
 
-    this.rowData$ = this.http
-      .get<any[]>('https://www.ag-grid.com/example-assets/row-data.json');
   }
 }

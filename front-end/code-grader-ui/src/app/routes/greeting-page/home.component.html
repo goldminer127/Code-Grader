@@ -16,7 +16,7 @@
     </li>
 </ul>
 
-<div style="height: 80vh; width: 100%">
+<div *ngIf="user.email">
     <app-grid
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Amplify, Auth } from 'aws-amplify';
-import { BehaviorSubject, catchError, from, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { environment } from 'src/environments/environments';
 import { IUser } from '../app.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,9 @@ export class CognitoService {
 
   private authenticationSubject: BehaviorSubject<any>;
 
-  constructor() {
+  constructor(
+    private userService: UserService
+  ) {
     Amplify.configure({
       Auth: environment.cognito,
     });
@@ -28,7 +31,15 @@ export class CognitoService {
         given_name: user.firstName,
         family_name: user.lastName,
       }
-    }));
+    })).pipe(
+      switchMap(()=>{
+        return this.userService.createUser(
+          user.firstName,
+          user.lastName,
+          user.email
+        )
+      })
+    )
   }
 
   public confirmSignUp(user: IUser, code: string): Observable<any> {
@@ -37,7 +48,7 @@ export class CognitoService {
 
   public signIn(email: string, password: string): Observable<any> {
     return from(Auth.signIn(email, password)).pipe(
-      tap(()=> {
+      tap(() => {
         this.authenticationSubject.next(true);
       })
     )
@@ -49,25 +60,37 @@ export class CognitoService {
 
   public signOut(): Observable<any> {
     return from(Auth.signOut()).pipe(
-      tap(()=>{
+      tap(() => {
         this.authenticationSubject.next(false);
       })
     )
   }
 
   public isAuthenticated(): Observable<boolean> {
-    if (this.authenticationSubject.value) {
-      return of(true);
-    } else {
-      return this.getUser().pipe(
-        map((user: any)=> user ? true : false),
-        catchError(()=> of(false))
-      )
-    }
+    return this.getUser().pipe(
+      map((user: any) => {
+        if(user){
+          this.authenticationSubject.next(true);
+        }else{
+          this.authenticationSubject.next(false);
+        }
+
+        return user ? true : false
+      }),
+      catchError(() => of(false))
+    )
   }
 
   public getUser(): Observable<any> {
-    return from(Auth.currentUserInfo());
+    return from(Auth.currentUserInfo()).pipe(
+      tap((user:any)=> {
+        if(user.attributes){
+          this.authenticationSubject.next(true)
+        }else{
+          this.authenticationSubject.next(false)
+        }
+      })
+    );
   }
 
   //TODO convert to observable
@@ -82,7 +105,7 @@ export class CognitoService {
     return from(Auth.forgotPassword(username));
   }
 
-  public forgotPasswordSubmit(username: string, code: string, newPassword: string) : Observable<any> {
+  public forgotPasswordSubmit(username: string, code: string, newPassword: string): Observable<any> {
     return from(Auth.forgotPasswordSubmit(username, code, newPassword));
   }
 
