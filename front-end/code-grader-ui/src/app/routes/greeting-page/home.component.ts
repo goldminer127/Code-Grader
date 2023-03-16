@@ -5,9 +5,9 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { map, Observable, switchMap } from 'rxjs';
 import { BASE_API_URL, LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
-import { IUser } from 'src/app/app.model';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { courseMapper } from 'src/app/services/mappers/courses.mapper';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -17,15 +17,15 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class HomeComponent implements OnInit {
 
-  user: IUser;
+  user: any;
   activePill: PILLS = PILLS.ALL;
   gridApi: GridApi | undefined;
   columnApi: ColumnApi | undefined;
 
   // Each Column Definition results in one Column.
   public columnDefs: ColDef[] = [
-    { field: 'class_name', headerName: "Class Name" },
-    { field: 'role_name', headerName: "Role" },
+    { field: 'className', headerName: "Class Name" },
+    { field: 'roleName', headerName: "Role" },
     { field: '', headerName: 'View Details' },
     { headerName: 'Enter Class' }
   ];
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
     private http: HttpClient,
     private userService: UserService
   ) {
-    this.user = {} as IUser;
+    this.user = {};
   }
 
   ngOnInit(): void {
@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
         this.cognitoService.getUser().subscribe((user: any) => {
           if (user.attributes) {
             this.user = user.attributes;
+            console.log(this.user)
           } else {
             this.router.navigate([''])
           }
@@ -101,11 +102,11 @@ export class HomeComponent implements OnInit {
           return this.http
             .get<any[]>(`${BASE_API_URL}/class/${resp.message.userInfo.user_id}`).pipe(
               map((data:any )=> {
-                const results = this.activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
+                let results = this.activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
                                 : this.activePill === PILLS.GRADER ? data.message.graderClasses
                                 : this.activePill === PILLS.INSTRUCTOR ? data.message.instructorClasses
                                 : data.message.studentClasses
-                return results;
+                return courseMapper(results);
               })
             );
         })
