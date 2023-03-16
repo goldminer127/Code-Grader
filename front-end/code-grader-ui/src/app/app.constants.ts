@@ -24,3 +24,5 @@ export enum PILLS {
     STUDENT = 'student',
     ALL = 'all'
 }
+
+export const BASE_API_URL = 'https://7o49xf1a50.execute-api.us-east-1.amazonaws.com';

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BASE_API_URL } from '../app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class UserService {
   ) { }
 
   createUser(firstName : string, lastName : string, email : string): Observable<any> {
-    return this.http.put('http://localhost:3000/user', {
+    return this.http.put(`${BASE_API_URL}/user`, {
       firstName: firstName,
       lastName: lastName,
       email: email
@@ -20,6 +21,6 @@ export class UserService {
   }
 
   getUserInfo(email: string): Observable<any> {
-    return this.http.get(`http://localhost:3000/user/${email}`);
+    return this.http.get(`${BASE_API_URL}/user/${email}`)
   }
 }

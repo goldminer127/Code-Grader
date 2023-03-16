@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { map, Observable, switchMap } from 'rxjs';
-import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
+import { BASE_API_URL, LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
 import { IUser } from 'src/app/app.model';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit {
       this.userService.getUserInfo(this.user.email).pipe(
         switchMap((resp: any) => {
           return this.http
-            .get<any[]>(`http://localhost:3000/class/${resp.message.userInfo.user_id}`).pipe(
+            .get<any[]>(`${BASE_API_URL}/class/${resp.message.userInfo.user_id}`).pipe(
               map((data:any )=> {
                 const results = this.activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
                                 : this.activePill === PILLS.GRADER ? data.message.graderClasses
