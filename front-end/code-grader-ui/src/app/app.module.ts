@@ -26,6 +26,8 @@ import { GridComponent } from './components/grid/grid.component';
 import { ClassDetailsModalComponent } from './components/modals/class-details/class-details-modal.component';
 import { ClassDetailsModalButtonComponent } from './components/modals/class-details/class-details-modal-button.component';
 import { CourseService } from './services/course.service';
+import { CourseComponent } from './routes/course/course.component';
+import { CourseLinkComponent } from './components/course-link/course-link.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { CourseService } from './services/course.service';
     HomeComponent,
     GridComponent,
     ClassDetailsModalComponent,
-    ClassDetailsModalButtonComponent
+    ClassDetailsModalButtonComponent,
+    CourseComponent,
+    CourseLinkComponent
   ],
   imports: [
     BrowserModule,
