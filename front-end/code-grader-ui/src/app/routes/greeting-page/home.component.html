@@ -1,8 +1,15 @@
 <ng-container *ngIf="user.email">
-    <h1 class="px-3 py-3">
-        Greetings {{this.user.given_name}} {{this.user.family_name}}!
-    </h1>
-    
+    <div class="d-flex justify-content-between px-3 py-3">
+        <h1>
+            Greetings {{this.user.given_name}}!
+        </h1>
+
+        <div class="py-3">
+            <button type="button" class="btn btn-primary btn-sm mx-3">Join a Course</button>
+            <button type="button" class="btn btn-secondary btn-sm">Create a Course</button>
+        </div>
+    </div>
+
     <ul class="nav nav-pills nav-fill">
         <li class="nav-item px-3 py-3">
             <a class="nav-link" (click)="onPillClick('instructor')"
@@ -20,14 +27,14 @@
             <a class="nav-link" (click)="onPillClick('all')" [ngClass]="activePill === 'all' ? 'active' : ''">All</a>
         </li>
     </ul>
-    
-    <app-grid
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
+
+    <app-grid 
+        [columnDefs]="columnDefs" 
+        [defaultColDef]="defaultColDef" 
         [rowData$]="rowData$"
-        (gridReadyEvent)="onGridReady($event)"
-        (cellClickedEvent)="onCellClicked($event)"
-    ></app-grid>
+        (gridReadyEvent)="onGridReady($event)" 
+        (cellClickedEvent)="onCellClicked($event)">
+    </app-grid>
 </ng-container>
 
 <app-class-details-modal></app-class-details-modal>

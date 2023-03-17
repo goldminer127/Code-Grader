@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Observable, switchMap } from 'rxjs';
 import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
+import { CourseLinkComponent } from 'src/app/components/course-link/course-link.component';
 import { ClassDetailsModalButtonComponent } from 'src/app/components/modals/class-details/class-details-modal-button.component';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { CourseService } from 'src/app/services/course.service';
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     { field: 'className', headerName: "Class Name" },
     { field: 'roleName', headerName: "Role" },
     { field: '', headerName: 'View Details', cellRenderer: ClassDetailsModalButtonComponent },
-    { headerName: 'Enter Class' }
+    { headerName: 'Enter Class', cellRenderer: CourseLinkComponent }
   ];
 
   // DefaultColDef sets props common to all Columns
@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit {
         this.cognitoService.getUser().subscribe((user: any) => {
           if (user.attributes) {
             this.user = user.attributes;
-            console.log(this.user)
           } else {
             this.router.navigate([''])
           }
