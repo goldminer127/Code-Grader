@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { BASE_API_URL, PILLS } from '../app.constants';
 import { courseMapper } from './mappers/courses.mapper';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import { courseMapper } from './mappers/courses.mapper';
 export class CourseService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private userService: UserService
   ) { }
 
   getAllCourses(userId: string, activePill: string): Observable<any> {
@@ -41,5 +43,21 @@ export class CourseService {
     return this.http.get(`${BASE_API_URL}/class/instructor/${classId}`).pipe(
       map((data:any)=>data.message.result)
     );
+  }
+
+  getUserRoleForCourse(userId: string, classId: string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/role/${userId}/${classId}`).pipe(
+      map((data: any)=> data.message)
+    )
+  }
+
+  checkUserBelongsToCourse(userEmail: string, classId: string): Observable<boolean | string> {
+    return this.userService.getUserInfo(userEmail).pipe(
+      switchMap((userData:any)=> {
+        return this.http.get(`${BASE_API_URL}/role/${userData.message.userInfo.user_id}/${classId}`).pipe(
+          map((resp:any)=> resp.message?.result ? resp.message.result['role_name'] : false)
+        )
+      })
+    )
   }
 }
