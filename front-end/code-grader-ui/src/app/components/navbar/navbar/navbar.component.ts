@@ -58,10 +58,14 @@ export class NavbarComponent implements OnInit {
   }
 
   onNavbarClick(state: string): void {
-    this.landingPageStorageService.set$(
-      LANDING_PAGE_STORAGE.currentState,
-      state as LANDING_PAGE_STATE
-    )
+    if(state === 'home'){
+      this.router.navigate(['home']);
+    }else{
+      this.landingPageStorageService.set$(
+        LANDING_PAGE_STORAGE.currentState,
+        state as LANDING_PAGE_STATE
+      )
+    }
   }
 
   signOutClick(): void {

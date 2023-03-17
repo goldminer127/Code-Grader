@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg" [ngClass]="darkMode ? 'navbar-light bg-light' : 'navbar-dark bg-dark'">
     <div class="container-fluid">
-        <a (click)="navbarState !== 'home' ? onNavbarClick('default') : ''" class="navbar-brand mb-1" style="font-weight: 600; cursor: pointer" >
+        <a (click)="navbarState !== 'home' ? onNavbarClick('default') : onNavbarClick('home')" class="navbar-brand mb-1" style="font-weight: 600; cursor: pointer" >
             <img *ngIf="darkMode" src="../../../../assets/images/scg-logo.png" width="30" height="24" >
             <img *ngIf="!darkMode" src="../../../../assets/images/scg-logo-dark-mode.png" width="30" height="24" >
         </a>
