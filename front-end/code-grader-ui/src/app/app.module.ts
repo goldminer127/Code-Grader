@@ -23,6 +23,9 @@ import { HomeComponent } from './routes/greeting-page/home.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientModule } from  '@angular/common/http';
 import { GridComponent } from './components/grid/grid.component';
+import { ClassDetailsModalComponent } from './components/modals/class-details/class-details-modal.component';
+import { ClassDetailsModalButtonComponent } from './components/modals/class-details/class-details-modal-button.component';
+import { CourseService } from './services/course.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,9 @@ import { GridComponent } from './components/grid/grid.component';
     CardComponent,
     ForgotPasswordComponent,
     HomeComponent,
-    GridComponent
+    GridComponent,
+    ClassDetailsModalComponent,
+    ClassDetailsModalButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -47,12 +52,13 @@ import { GridComponent } from './components/grid/grid.component';
     FormsModule,
     ReactiveFormsModule,
     AgGridModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     LandingPageStorageService,
     CognitoService,
-    UserStorageService
+    UserStorageService,
+    CourseService
   ],
   bootstrap: [AppComponent]
 })

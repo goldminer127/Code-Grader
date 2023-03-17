@@ -3,11 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { map, Observable, switchMap } from 'rxjs';
-import { BASE_API_URL, LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
+import { Observable, switchMap } from 'rxjs';
+import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
+import { ClassDetailsModalButtonComponent } from 'src/app/components/modals/class-details/class-details-modal-button.component';
 import { CognitoService } from 'src/app/services/cognito.service';
+import { CourseService } from 'src/app/services/course.service';
+import { GridStorageService, GRID_STORAGE } from 'src/app/services/grid-storage.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
-import { courseMapper } from 'src/app/services/mappers/courses.mapper';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -26,7 +28,7 @@ export class HomeComponent implements OnInit {
   public columnDefs: ColDef[] = [
     { field: 'className', headerName: "Class Name" },
     { field: 'roleName', headerName: "Role" },
-    { field: '', headerName: 'View Details' },
+    { field: '', headerName: 'View Details', cellRenderer: ClassDetailsModalButtonComponent },
     { headerName: 'Enter Class' }
   ];
 
@@ -43,8 +45,9 @@ export class HomeComponent implements OnInit {
     private landingPageStorageService: LandingPageStorageService,
     private cognitoService: CognitoService,
     private router: Router,
-    private http: HttpClient,
-    private userService: UserService
+    private userService: UserService,
+    private gridStorageService: GridStorageService,
+    private courseService: CourseService
   ) {
     this.user = {};
   }
@@ -81,9 +84,12 @@ export class HomeComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
-  // Example of consuming Grid Event
+  // Consuming Grid Event
   onCellClicked(e: CellClickedEvent): void {
-    console.log('cellClicked', e);
+    this.gridStorageService.set$(
+      GRID_STORAGE.selectedRowData,
+      e.data
+    )
   }
 
   clearSelection(): void {
@@ -98,19 +104,9 @@ export class HomeComponent implements OnInit {
   refreshData(): void {
     this.rowData$ =
       this.userService.getUserInfo(this.user.email).pipe(
-        switchMap((resp: any) => {
-          return this.http
-            .get<any[]>(`${BASE_API_URL}/class/${resp.message.userInfo.user_id}`).pipe(
-              map((data:any )=> {
-                let results = this.activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
-                                : this.activePill === PILLS.GRADER ? data.message.graderClasses
-                                : this.activePill === PILLS.INSTRUCTOR ? data.message.instructorClasses
-                                : data.message.studentClasses
-                return courseMapper(results);
-              })
-            );
+        switchMap((resp: any)=> {
+          return this.courseService.getAllCourses(resp.message.userInfo.user_id, this.activePill);
         })
       )
-
   }
 }
