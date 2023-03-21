@@ -1,0 +1,54 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Join a Course</h5>
+                    <button type="button" class="close" (click)="closeModalClick()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="inviteCodeForm">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Invite Code</span>
+                            <input id="inviteCode" formControlName="inviteCode" type="text" class="form-control" placeholder="Course Invite Code">
+                        </div>
+                    </form>
+                    <ng-container *ngIf="classDoesNotExist">
+                        <p class="alert alert-danger" role="alert">
+                            Error: Invite Code not associated with a class.
+                        </p>
+                    </ng-container>
+                    <ng-container *ngIf="userPartOfClass">
+                        <p class="alert alert-danger" role="alert">
+                            Error: You're already a part of this class!
+                        </p>
+                    </ng-container>
+                    <ng-container *ngIf="joinCourseSuccess">
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-bold">Class Name:</p>
+                            <p>{{inviteCodeClassInfo.class_name}}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-bold">Instructor:</p>
+                            <p>{{inviteCodeClassInfo.first_name}} {{inviteCodeClassInfo.last_name}}</p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="validateInviteCode()" [disabled]="buttonDisabled()">
+                        {{isLoading ? '' : joinCourseSuccess ? 'Joined! Redirecting...' : 'Join Course!'}}
+                        <div *ngIf="isLoading">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </div>
+                    </button>
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>
+                </div>
+        </div>
+    </div>
+    </div>
+</ng-container>

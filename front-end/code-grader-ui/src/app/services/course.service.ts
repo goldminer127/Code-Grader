@@ -60,4 +60,23 @@ export class CourseService {
       })
     )
   }
+
+  checkInviteCode(inviteCode: string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/classInfo/invite/${inviteCode}`).pipe(
+      map((resp:any)=>resp.message.result)
+    )
+  }
+
+  checkUserPartOfClass(userId: string, inviteCode: string): Observable<boolean> {
+    return this.http.get(`${BASE_API_URL}/user/${userId}/invite/${inviteCode}`).pipe(
+      map((resp:any)=>Number(resp.message[0]['user_count']) > 0)
+    )
+  }
+
+  addUserToClass(userId: string, inviteCode: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/join/class`,{
+      userId: userId,
+      inviteCode: inviteCode
+    });
+  }
 }

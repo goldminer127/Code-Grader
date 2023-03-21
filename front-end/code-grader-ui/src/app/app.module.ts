@@ -28,6 +28,7 @@ import { ClassDetailsModalButtonComponent } from './components/modals/class-deta
 import { CourseService } from './services/course.service';
 import { CourseComponent } from './routes/course/course.component';
 import { CourseLinkComponent } from './components/course-link/course-link.component';
+import { JoinCourseModalComponent } from './components/modals/join-course/join-course-modal.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { CourseLinkComponent } from './components/course-link/course-link.compon
     ClassDetailsModalComponent,
     ClassDetailsModalButtonComponent,
     CourseComponent,
-    CourseLinkComponent
+    CourseLinkComponent,
+    JoinCourseModalComponent
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
 import { CourseLinkComponent } from 'src/app/components/course-link/course-link.component';
 import { ClassDetailsModalButtonComponent } from 'src/app/components/modals/class-details/class-details-modal-button.component';
@@ -10,6 +10,7 @@ import { CognitoService } from 'src/app/services/cognito.service';
 import { CourseService } from 'src/app/services/course.service';
 import { GridStorageService, GRID_STORAGE } from 'src/app/services/grid-storage.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { UserStorageService, USER_STORAGE } from 'src/app/services/user-storage.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -47,7 +48,8 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private gridStorageService: GridStorageService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private userStorageService: UserStorageService
   ) {
     this.user = {};
   }
@@ -60,15 +62,20 @@ export class HomeComponent implements OnInit {
           LANDING_PAGE_STATE.HOME
         );
 
-        this.cognitoService.getUser().subscribe((user: any) => {
-          if (user.attributes) {
-            this.user = user.attributes;
-          } else {
-            this.router.navigate([''])
-          }
-        },
-          err => console.log("Err ", err)
-        )
+        this.cognitoService.getUser().pipe(
+          tap((user:any)=>{
+            if(user.attributes){
+              this.user = user.attributes;
+            }else{
+              this.router.navigate(['']);
+            }
+          }),
+          switchMap(()=>{
+            return this.userService.getUserInfo(this.user.email);
+          })
+        ).subscribe((userData: any)=> {
+          this.userStorageService.set$(USER_STORAGE.USER, userData.message.userInfo);
+        })
       } else {
         this.router.navigate(['']);
       }
