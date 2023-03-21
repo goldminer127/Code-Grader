@@ -1,7 +1,7 @@
 <!-- Modal -->
 <ng-container>
     <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog"
-    aria-hidden="true">
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
                 <div class="modal-header">
@@ -24,10 +24,15 @@
                     </ng-container>
                     <ng-container *ngIf="userPartOfClass">
                         <p class="alert alert-danger" role="alert">
-                            Error: You're already a part of this class!
+                            Error: You've already request to join or a part of this class!
                         </p>
                     </ng-container>
-                    <ng-container *ngIf="joinCourseSuccess">
+                    <ng-container *ngIf="requestCourseSuccess">
+                        <p class="alert alert-success" role="alert">
+                            Success: You've requested to join {{inviteCodeClassInfo.class_name}}!
+                        </p>
+                    </ng-container>
+                    <ng-container *ngIf="requestCourseSuccess">
                         <div class="d-flex justify-content-between">
                             <p class="fw-bold">Class Name:</p>
                             <p>{{inviteCodeClassInfo.class_name}}</p>
@@ -41,7 +46,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" (click)="validateInviteCode()" [disabled]="buttonDisabled()">
-                        {{isLoading ? '' : joinCourseSuccess ? 'Joined! Redirecting...' : 'Join Course!'}}
+                        {{isLoading ? '' : requestCourseSuccess ? 'Requested to join!' : 'Request to join Course!'}}
                         <div *ngIf="isLoading">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         </div>

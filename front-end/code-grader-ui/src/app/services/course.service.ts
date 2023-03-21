@@ -73,8 +73,8 @@ export class CourseService {
     )
   }
 
-  addUserToClass(userId: string, inviteCode: string): Observable<any> {
-    return this.http.put(`${BASE_API_URL}/join/class`,{
+  requestToJoinClass(userId: string, inviteCode: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/request/class`,{
       userId: userId,
       inviteCode: inviteCode
     });

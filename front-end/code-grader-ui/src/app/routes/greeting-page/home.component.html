@@ -1,18 +1,17 @@
 <ng-container *ngIf="user.email">
-    <div class="d-flex justify-content-between px-3 py-3">
+    <div class="d-flex justify-content-between px-3 pt-3">
         <h1>
             Greetings {{this.user.given_name}}!
         </h1>
-
-        <div class="py-3">
-            <button type="button" class="btn btn-primary btn-lg mx-3" data-bs-toggle="modal" data-bs-target="#joinCourseModal">
-                Join a Course
-            </button>
-            <button type="button" class="btn btn-secondary btn-lg">Create a Course</button>
-        </div>
+    </div>
+    <div class="py-3 px-3 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary btn-lg mx-3 join-course-button" data-bs-toggle="modal" data-bs-target="#joinCourseModal">
+            Join a Course
+        </button>
+        <button type="button" class="btn btn-secondary btn-lg create-course-button">Create a Course</button>
     </div>
 
-    <ul class="nav nav-pills nav-fill">
+    <ul class="nav nav-pills ">
         <li class="nav-item px-3 py-3">
             <a class="nav-link" (click)="onPillClick('instructor')"
                 [ngClass]="activePill === 'instructor' ? 'active' : ''">Instructor</a>
@@ -30,13 +29,16 @@
         </li>
     </ul>
 
-    <app-grid 
+    <div class="px-3">
+        <app-grid 
         [columnDefs]="columnDefs" 
         [defaultColDef]="defaultColDef" 
         [rowData$]="rowData$"
         (gridReadyEvent)="onGridReady($event)" 
         (cellClickedEvent)="onCellClicked($event)">
-    </app-grid>
+        </app-grid>
+    </div>
+
 </ng-container>
 
 <app-class-details-modal></app-class-details-modal>

@@ -17,7 +17,7 @@ export class JoinCourseModalComponent implements OnInit {
   classDoesNotExist: boolean = false;
   userPartOfClass: boolean | null = null;
   inviteCode: string | undefined;
-  joinCourseSuccess : boolean = false;
+  requestCourseSuccess : boolean = false;
   courseRouterLink : string | undefined;
   user: any;
 
@@ -43,7 +43,7 @@ export class JoinCourseModalComponent implements OnInit {
 
     this.classDoesNotExist = false;
     this.userPartOfClass = null;
-    this.joinCourseSuccess = false;
+    this.requestCourseSuccess = false;
     this.isLoading = true;
 
     this.courseService.checkInviteCode(this.inviteCode!).pipe( //Check if invite code is valid
@@ -72,7 +72,7 @@ export class JoinCourseModalComponent implements OnInit {
       }), //Add User to class
       switchMap((partOfClass: boolean)=>{
         if(!partOfClass && !this.userPartOfClass && !this.classDoesNotExist){
-          return this.courseService.addUserToClass(this.user.user_id, this.inviteCode!).pipe(
+          return this.courseService.requestToJoinClass(this.user.user_id, this.inviteCode!).pipe(
             map(()=>true)
           )
         }else{
@@ -84,31 +84,27 @@ export class JoinCourseModalComponent implements OnInit {
     .subscribe((success: boolean)=>{
       this.isLoading = false;
       if(success && !this.userPartOfClass && !this.classDoesNotExist){ //Display class info and redirect to class page
-        this.joinCourseSuccess = true; 
-        this.redirectToClass();
+        this.requestCourseSuccess = true; 
       }
     });
   }
 
   closeModalClick(): void {
-    this.classDoesNotExist = false;
-    this.userPartOfClass = null;
-    this.joinCourseSuccess = false;
-    this.isLoading = false;
-    this.inviteCodeForm.reset();
-    this.inviteCodeForm.controls.inviteCode.setValue('');
+    this.reset();
 
     this.closeModal!.nativeElement.click();
   }
 
   buttonDisabled(): boolean {
-    return this.inviteCodeForm.value.inviteCode?.length === 0 || this.isLoading || this.joinCourseSuccess;
+    return this.inviteCodeForm.value.inviteCode?.length === 0 || this.isLoading || this.requestCourseSuccess;
   }
 
-  redirectToClass(): void {
-    setTimeout(() => {
-      this.closeModalClick();
-      this.router.navigate([this.courseRouterLink]);
-    }, 3000)
+  reset(): void {
+    this.classDoesNotExist = false;
+    this.userPartOfClass = null;
+    this.requestCourseSuccess = false;
+    this.isLoading = false;
+    this.inviteCodeForm.reset();
+    this.inviteCodeForm.controls.inviteCode.setValue('');
   }
 }
