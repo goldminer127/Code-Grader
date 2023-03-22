@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Observable, switchMap, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { LANDING_PAGE_STATE, PILLS } from 'src/app/app.constants';
 import { CourseLinkComponent } from 'src/app/components/course-link/course-link.component';
 import { ClassDetailsModalButtonComponent } from 'src/app/components/modals/class-details/class-details-modal-button.component';
@@ -24,6 +24,13 @@ export class HomeComponent implements OnInit {
   activePill: PILLS = PILLS.ALL;
   gridApi: GridApi | undefined;
   columnApi: ColumnApi | undefined;
+
+  isLoading  = false;
+
+  mobileAllData$!: any[];
+  mobileInstructorData!: any[];
+  mobileGraderData!: any[];
+  mobileStudentData!: any[];
 
   // Each Column Definition results in one Column.
   public columnDefs: ColDef[] = [
@@ -57,23 +64,47 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.cognitoService.isAuthenticated().subscribe((success: boolean) => {
       if (success) {
+        this.isLoading = true;
+
         this.landingPageStorageService.set$(
           LANDING_PAGE_STORAGE.currentState,
           LANDING_PAGE_STATE.HOME
         );
 
         this.cognitoService.getUser().pipe(
-          tap((user:any)=>{
-            if(user.attributes){
+          tap((user: any) => {
+            if (user.attributes) {
               this.user = user.attributes;
-            }else{
+            } else {
               this.router.navigate(['']);
             }
           }),
-          switchMap(()=>{
+          switchMap(() => {
             return this.userService.getUserInfo(this.user.email);
+          }),
+          switchMap((userData:any)=>{
+            return this.userService.getUserInfo(userData.message.userInfo.email).pipe(
+              switchMap((resp: any)=>{
+                return forkJoin({
+                  all: this.courseService.getAllCourses(resp.message.userInfo.user_id, PILLS.ALL),
+                  instructor: this.courseService.getAllCourses(resp.message.userInfo.user_id, PILLS.INSTRUCTOR),
+                  grader: this.courseService.getAllCourses(resp.message.userInfo.user_id, PILLS.GRADER),
+                  student: this.courseService.getAllCourses(resp.message.userInfo.user_id, PILLS.STUDENT),
+                })
+              }),
+              tap((forkedData: any)=>{
+                this.mobileAllData$ = forkedData.all;
+                this.mobileInstructorData = forkedData.instructor;
+                this.mobileGraderData = forkedData.grader;
+                this.mobileStudentData = forkedData.student;
+              }),
+              map(()=>{
+                return userData;
+              })
+            )
           })
-        ).subscribe((userData: any)=> {
+        ).subscribe((userData: any) => {
+          this.isLoading = false;
           this.userStorageService.set$(USER_STORAGE.USER, userData.message.userInfo);
         })
       } else {
@@ -110,7 +141,7 @@ export class HomeComponent implements OnInit {
   refreshData(): void {
     this.rowData$ =
       this.userService.getUserInfo(this.user.email).pipe(
-        switchMap((resp: any)=> {
+        switchMap((resp: any) => {
           return this.courseService.getAllCourses(resp.message.userInfo.user_id, this.activePill);
         })
       )

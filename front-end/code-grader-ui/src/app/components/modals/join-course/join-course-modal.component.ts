@@ -12,12 +12,12 @@ import { UserStorageService, USER_STORAGE } from 'src/app/services/user-storage.
 })
 export class JoinCourseModalComponent implements OnInit {
   @ViewChild('closeModal') closeModal: ElementRef | undefined;
-  isLoading : boolean = false;
+  isLoading  = false;
   inviteCodeClassInfo: any;
-  classDoesNotExist: boolean = false;
+  classDoesNotExist = false;
   userPartOfClass: boolean | null = null;
   inviteCode: string | undefined;
-  requestCourseSuccess : boolean = false;
+  requestCourseSuccess  = false;
   courseRouterLink : string | undefined;
   user: any;
 
@@ -48,7 +48,7 @@ export class JoinCourseModalComponent implements OnInit {
 
     this.courseService.checkInviteCode(this.inviteCode!).pipe( //Check if invite code is valid
       tap((resp:any)=>{
-        let validClass : boolean = false;
+        let validClass  = false;
         if(resp.length > 0){
           this.inviteCodeClassInfo = resp[0];
           this.courseRouterLink = `/home/class/${this.inviteCodeClassInfo.class_id}`;
