@@ -15,7 +15,6 @@ export class CreateCourseModalComponent {
   isLoading = false;
   inviteCode: string | undefined;
   classCreateSuccess = false;
-  routerLink : string | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,7 +34,6 @@ export class CreateCourseModalComponent {
       this.isLoading = false;
       this.inviteCode = resp.message.inviteCode as string;
       this.classCreateSuccess = true;
-      this.routerLink = `/home/class/${resp.message.classId}`;
     })
   }
 
@@ -45,7 +43,6 @@ export class CreateCourseModalComponent {
     this.isLoading = false;
     this.inviteCode = undefined;
     this.classCreateSuccess = false;
-    this.routerLink = undefined;
 
     this.closeModal!.nativeElement.click();
   }

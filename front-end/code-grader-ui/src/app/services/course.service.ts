@@ -16,7 +16,7 @@ export class CourseService {
   ) { }
 
   getAllCourses(userId: string, activePill: string): Observable<any> {
-    return this.http.get(`${BASE_API_URL}/class/${userId}`).pipe(
+    return this.http.get(`${BASE_API_URL}/class/all/${userId}`).pipe(
       map((data: any) => {
         const results = activePill === PILLS.ALL ? data.message.instructorClasses.concat(data.message.graderClasses, data.message.studentClasses)
           : activePill === PILLS.GRADER ? data.message.graderClasses
@@ -85,5 +85,11 @@ export class CourseService {
       userId: userId,
       className: className
     })
+  }
+
+  getClassFromClassId(classId:string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/class/${classId}`).pipe(
+      map((resp:any)=>resp.message.result[0])
+    );
   }
 }
