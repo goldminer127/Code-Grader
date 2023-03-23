@@ -29,6 +29,7 @@ import { CourseService } from './services/course.service';
 import { CourseComponent } from './routes/course/course.component';
 import { CourseLinkComponent } from './components/course-link/course-link.component';
 import { JoinCourseModalComponent } from './components/modals/join-course/join-course-modal.component';
+import { CreateCourseModalComponent } from './components/modals/create-course/create-course-modal.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { JoinCourseModalComponent } from './components/modals/join-course/join-c
     ClassDetailsModalButtonComponent,
     CourseComponent,
     CourseLinkComponent,
-    JoinCourseModalComponent
+    JoinCourseModalComponent,
+    CreateCourseModalComponent
   ],
   imports: [
     BrowserModule,

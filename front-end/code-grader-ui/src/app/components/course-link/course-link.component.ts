@@ -15,7 +15,6 @@ export class CourseLinkComponent implements ICellRendererAngularComp {
     // throw new Error('Method not implemented.');
     this.cellData = params.data;
     this.routerLink = `class/${params.data.classId}`;
-    console.log(params)
   }
   refresh(params: ICellRendererParams<any, any>): boolean {
     // throw new Error('Method not implemented.');

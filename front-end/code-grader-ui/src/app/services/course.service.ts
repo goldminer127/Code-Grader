@@ -79,4 +79,11 @@ export class CourseService {
       inviteCode: inviteCode
     });
   }
+
+  createClass(userId: string, className: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/class`, {
+      userId: userId,
+      className: className
+    })
+  }
 }

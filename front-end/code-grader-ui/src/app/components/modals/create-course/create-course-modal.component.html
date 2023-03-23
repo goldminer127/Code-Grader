@@ -1,0 +1,55 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="createCourseModal" tabindex="-1" role="dialog"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create a Course</h5>
+                    <button type="button" class="close" (click)="closeModalClick()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form [formGroup]="createClassForm">
+                          <div class="mb-3">
+                            <label for="className" class="form-label">Course Name</label>
+                            <input type="text" class="form-control" id="className" [readOnly]="classCreateSuccess" formControlName="className" required>
+                          </div>
+                          <div class="mb-3">
+
+                            <ng-container *ngIf="!classCreateSuccess">
+                                <button type="submit" [disabled]="buttonDisabled()" class="btn btn-primary" (click)="onSubmit()">
+                                    {{isLoading ? '' : 'Create Course'}}
+                                    <div *ngIf="isLoading">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    </div>
+                                </button>
+                            </ng-container>
+   
+                            <ng-container *ngIf="classCreateSuccess">
+                                <div class="pt-3">
+                                    <p class="alert alert-success" role="alert">
+                                        Success: You've created a class! <br> 
+                                        <a [routerLink]="routerLink">Click here to navigate to it!</a> <br>
+                                    </p>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Invite Code</span>
+                                        </div>
+                                        <input type="text" class="form-control" [value]="inviteCode" readonly aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    </div>
+                                </div>
+                            </ng-container>
+                          </div>
+                        </form>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>
+                </div>
+        </div>
+    </div>
+    </div>
+</ng-container>
