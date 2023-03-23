@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
@@ -18,7 +18,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   user: any;
   activePill: PILLS = PILLS.ALL;
@@ -60,8 +60,18 @@ export class HomeComponent implements OnInit {
   ) {
     this.user = {};
   }
+  ngOnDestroy(): void {
+    document.body.classList.remove(
+      LANDING_PAGE_STATE.HOME
+    )
+  }
 
   ngOnInit(): void {
+
+    document.body.classList.add(
+      LANDING_PAGE_STATE.HOME
+    )
+
     this.cognitoService.isAuthenticated().subscribe((success: boolean) => {
       if (success) {
         this.isLoading = true;
