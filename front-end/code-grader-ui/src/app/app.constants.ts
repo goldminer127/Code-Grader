@@ -26,3 +26,13 @@ export enum PILLS {
 }
 
 export const BASE_API_URL = 'https://7o49xf1a50.execute-api.us-east-1.amazonaws.com';
+
+export enum COURSE_STATE {
+    OVERVIEW = 'overview',
+    ASSIGNMENTS = 'assignments',
+    SUBMISSIONS = 'submissions',
+    ROSTER = 'roster',
+    GRADING = 'grading',
+    SETTINGS = 'settings',
+    NO_STATE = 'noState'
+}
