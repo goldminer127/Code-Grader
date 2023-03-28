@@ -1,4 +1,4 @@
-<div class="container-fluid ps-md-0" style="overflow: hidden; padding-left: 0!important; padding-right: 0!important;">
+<div *ngIf="display" class="container-fluid ps-md-0" style="overflow: hidden; padding-left: 0!important; padding-right: 0!important;">
     
     <app-features *ngIf="currentState === 'features'" ></app-features>
 
@@ -19,7 +19,7 @@
 
                             <div class="landing-page-text text-center align-items-center">
 
-                                <div *ngIf="currentState === 'home'" >
+                                <div *ngIf="currentState === 'default'" >
                                     <h1 class="login-heading text-center mb-4">
                                         {{ appname }}
                                     </h1>

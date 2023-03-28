@@ -1,8 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 body.dark-mode {
     background-color: #121212;
     color: #dfe6e9;
+
+    .modal-content {
+        color: #dfe6e9;
+        background-color: #121212;
+        border-color: #dfe6e9;
+    }
+
+    .modal-backdrop {
+        background-color: rgb(92, 87, 87);
+    }
+
+    .accordion-item {
+        background-color: #121212;
+        color: #dfe6e9;
+    }
+
+    .accordion-button{
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+    }
+
+    .accordion-button:not(.collapsed){
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+    }
+
+    .accordion-button:focus{
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+        box-shadow: 0 0 0 0.25rem #B3C5F4;
+    }
 }
 
 body:not(.dark-mode-preloading) {
@@ -12,4 +48,33 @@ body:not(.dark-mode-preloading) {
 body.light-mode {
     background-color: white;
     color: #2d3436;
+
+    .accordion-button{
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+    }
+
+    .accordion-button:focus{
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+        box-shadow: 0 0 0 0.25rem #B3C5F4;
+    }
+
+    .accordion-button:not(.collapsed){
+        background-color: #E8DDFF;
+        color:#121212;
+        border-color: #E8DDFF;
+    }
 }
+
+// body.light-mode.home {
+//     background: linear-gradient(to right, white 10%,white 70%,#B07FEEAB 100%);
+//     color: #2d3436;
+// }
+
+// body.dark-mode.home {
+//     background: linear-gradient(to right, #B07FEEAB 0%,white 8%,white 92%,#B07FEEAB 100%);
+//     color: #2d3436;
+// }

@@ -19,6 +19,17 @@ import { ConfirmSignupComponent } from './components/confirm-signup/confirm-sign
 import { UserStorageService } from './services/user-storage.service';
 import { CardComponent } from './components/card/card.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { HomeComponent } from './routes/greeting-page/home.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { HttpClientModule } from  '@angular/common/http';
+import { GridComponent } from './components/grid/grid.component';
+import { ClassDetailsModalComponent } from './components/modals/class-details/class-details-modal.component';
+import { ClassDetailsModalButtonComponent } from './components/modals/class-details/class-details-modal-button.component';
+import { CourseService } from './services/course.service';
+import { CourseComponent } from './routes/course/course.component';
+import { CourseLinkComponent } from './components/course-link/course-link.component';
+import { JoinCourseModalComponent } from './components/modals/join-course/join-course-modal.component';
+import { CreateCourseModalComponent } from './components/modals/create-course/create-course-modal.component';
 
 @NgModule({
   declarations: [
@@ -32,19 +43,30 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     UserSettingsComponent,
     ConfirmSignupComponent,
     CardComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    HomeComponent,
+    GridComponent,
+    ClassDetailsModalComponent,
+    ClassDetailsModalButtonComponent,
+    CourseComponent,
+    CourseLinkComponent,
+    JoinCourseModalComponent,
+    CreateCourseModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AgGridModule,
+    HttpClientModule,
   ],
   providers: [
     LandingPageStorageService,
     CognitoService,
-    UserStorageService
+    UserStorageService,
+    CourseService
   ],
   bootstrap: [AppComponent]
 })
