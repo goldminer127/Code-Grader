@@ -38,7 +38,7 @@ jobs:
         run: |
           cd front-end
           cd code-grader-ui
-          npm run build
+          ng build --base-href ./
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
