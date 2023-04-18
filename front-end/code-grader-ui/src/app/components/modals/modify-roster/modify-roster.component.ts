@@ -12,7 +12,7 @@ export class ModifyRosterComponent implements OnInit {
   isLoading = false;
   roles: any[] | undefined;
   user: any;
-  changeRoleSuccess: boolean = false;
+  changeRoleSuccess = false;
 
   selectedRole : any;
 
