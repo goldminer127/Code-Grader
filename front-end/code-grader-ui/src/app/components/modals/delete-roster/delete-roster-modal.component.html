@@ -1,0 +1,34 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="deleteRosterModal" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div *ngIf="isLoading">
+                <span class="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+                Loading User Info...
+            </div>
+            <ng-container *ngIf="!isLoading">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Remove User</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove <strong>{{rowData?.first_name}}  {{rowData?.last_name}}</strong> from the roster?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="removeUserClick()">
+                        {{isLoading ? '' : success ? 'User Removed' : 'Remove User'}}
+                        <div *ngIf="isLoading">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </div>
+                    </button>
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    </div>
+</ng-container>
