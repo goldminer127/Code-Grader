@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import { BASE_API_URL, PILLS } from '../app.constants';
 import { courseMapper } from './mappers/courses.mapper';
 import { UserService } from './user.service';
@@ -31,6 +31,12 @@ export class CourseService {
     return this.http.get(`${BASE_API_URL}/class/count/students/${classId}`).pipe(
       map((resp:any)=> resp.message.result[0]["user_count"])
     );
+  }
+
+  getPendingCount(classId: string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/class/count/pending/${classId}`).pipe(
+      map((resp:any)=> resp.message.result[0]?.user_count ?? 0)
+    )
   }
 
   getGradersForCourse(classId: string): Observable<any> {
@@ -91,5 +97,70 @@ export class CourseService {
     return this.http.get(`${BASE_API_URL}/class/${classId}`).pipe(
       map((resp:any)=>resp.message.result[0])
     );
+  }
+
+  getRosterforClass(classId: string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/class/roster/${classId}`).pipe(
+      map((resp:any)=>resp.message.result)
+    )
+  }
+
+  fetchAllRoles(): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/roles`).pipe(
+      map((resp:any)=>resp.message.result)
+    )
+  }
+
+  getAssignmentsForClass(classId: string): Observable<any> {
+    return of(
+      [
+        {
+          assignmentName: "Homework 1",
+          dueDate: "1/1/2023",
+        },
+        {
+          assignmentName: "Homework 2",
+          dueDate: "2/2/2023",
+        },
+        {
+          assignmentName: "Homework 3",
+          dueDate: "4/11/2023",
+        },
+        {
+          assignmentName: "Homework 4",
+          dueDate: "4/11/2023"
+        }
+      ]
+    )
+  }
+
+  getSubmissionsForClass(classId: string): Observable<any> {
+    return of(
+      [
+        {
+          assignmentName: "Homework 1",
+          date: "1/1/2023"
+        },
+        {
+          assignmentName: "Homework 2",
+          date: "2/2/2023"
+        }
+      ]
+    )
+  }
+
+  changeUserRole(classId: string, userId: string, roleName: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/roles/change`, {
+      classId: classId,
+      userId: userId,
+      roleName: roleName
+    });
+  }
+
+  deleteUserFromRoster(classId: string, userId: string) : Observable<any> {
+    return this.http.put(`${BASE_API_URL}/roster/delete`, {
+      classId: classId,
+      userId: userId
+    })
   }
 }

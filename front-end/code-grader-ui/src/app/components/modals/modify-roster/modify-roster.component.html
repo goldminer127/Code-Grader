@@ -1,0 +1,44 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="modifyRosterModal" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div *ngIf="isLoading">
+                <span class="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+                Loading User Info...
+            </div>
+            <ng-container *ngIf="!isLoading">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modify User</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">User:</p>
+                        <p>{{user?.first_name}} {{user?.last_name}}</p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">Role:</p>
+                        <select [(ngModel)]="selectedRole" (change)="selected()" class="form-select form-select-sm w-50" aria-label="Default select example">
+                            <option *ngFor="let role of roles" [value]="role?.role_name" [selected]="user?.role_name === role?.role_name" >{{role?.role_name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="changeRoleClick()" [disabled]="buttonDisabled()">
+                        {{isLoading ? '' : changeRoleSuccess ? 'Role Changed!' : 'Change Role'}}
+                        <div *ngIf="isLoading">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </div>
+                    </button>
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    </div>
+</ng-container>

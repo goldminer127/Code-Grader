@@ -30,6 +30,10 @@ import { CourseComponent } from './routes/course/course.component';
 import { CourseLinkComponent } from './components/course-link/course-link.component';
 import { JoinCourseModalComponent } from './components/modals/join-course/join-course-modal.component';
 import { CreateCourseModalComponent } from './components/modals/create-course/create-course-modal.component';
+import { ModifyRosterComponent } from './components/modals/modify-roster/modify-roster.component';
+import { ModifyRosterButtonComponent } from './components/modals/modify-roster/modify-roster-button.component';
+import { DeleteRosterButtonComponent } from './components/modals/delete-roster/delete-roster-button.component';
+import { DeleteRosterModalComponent } from './components/modals/delete-roster/delete-roster-modal.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,11 @@ import { CreateCourseModalComponent } from './components/modals/create-course/cr
     CourseComponent,
     CourseLinkComponent,
     JoinCourseModalComponent,
-    CreateCourseModalComponent
+    CreateCourseModalComponent,
+    ModifyRosterComponent,
+    ModifyRosterButtonComponent,
+    DeleteRosterButtonComponent,
+    DeleteRosterModalComponent
   ],
   imports: [
     BrowserModule,
