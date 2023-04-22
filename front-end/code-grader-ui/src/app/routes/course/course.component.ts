@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
+import * as moment from 'moment';
 import { Observable, forkJoin, from, of, switchMap, tap } from 'rxjs';
 import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
@@ -27,6 +28,8 @@ export class CourseComponent implements OnInit {
   classInfo: any | undefined;
   classSize: number | undefined;
   pendingCount: number | undefined;
+  assignments: any[];
+  nextAssignment: any;
 
   date = new Date().toLocaleString();
 
@@ -113,10 +116,13 @@ export class CourseComponent implements OnInit {
           graders: this.courseService.getGradersForCourse(params.classId),
           classSize: this.courseService.getNumberOfStudentsForCourse(params.classId),
           roster: this.courseService.getRosterforClass(params.classId),
-          pendingCount: this.courseService.getPendingCount(params.classId)
+          pendingCount: this.courseService.getPendingCount(params.classId),
+          assignments: this.courseService.getAssignmentsForClass(params.classId)
         })
       })
     ).subscribe((data: any) => {
+      this.assignments = data.assignments;
+      this.findNextAssignmentDue();
       this.classInfo = data.classInfo;
       this.classSize = data.classSize;
       this.className = data.classInfo?.class_name;
@@ -126,6 +132,10 @@ export class CourseComponent implements OnInit {
     });
   }
 
+  findNextAssignmentDue(): void {
+    this.nextAssignment = this.assignments.filter((assignment:any)=> moment(assignment.isoDueDate).isAfter(moment()))[0];
+  }
+  
   onAssignmentsGridReady(params: GridReadyEvent) {
     this.refreshAssignmentsData();
     this.gridApi = params.api;

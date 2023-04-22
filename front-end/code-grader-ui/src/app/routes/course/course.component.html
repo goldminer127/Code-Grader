@@ -55,20 +55,40 @@
                             <div class="accordion-body">
                                 <div class="d-flex justify-content-between">
                                     <strong>Upcoming Assigment:</strong>
-                                    <p>Homework 3</p>
+                                    <ng-container *ngIf="nextAssignment">
+                                        <p>{{ nextAssignment.assignment_name }}</p>
+                                    </ng-container>
+                                    <ng-container *ngIf="!nextAssignment">
+                                        N/A
+                                    </ng-container>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <strong>Due Date:</strong>
-                                    <p>{{date}}</p>
+                                    <ng-container *ngIf="nextAssignment">
+                                        <p>{{ nextAssignment.due_date }}</p>
+                                    </ng-container>
+                                    <ng-container *ngIf="!nextAssignment">
+                                        N/A
+                                    </ng-container>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between">
                                     <strong>Recently Assigned:</strong>
-                                    <p>Homework 4</p>
+                                    <ng-container *ngIf="assignments.length">
+                                        <p>{{ assignments[assignments.length-1].assignment_name }}</p>
+                                    </ng-container>
+                                    <ng-container *ngIf="assignments.length === 0">
+                                        N/A
+                                    </ng-container>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <strong>Due Date:</strong>
-                                    <p>{{date}}</p>
+                                    <ng-container *ngIf="assignments.length">
+                                        <p>{{ assignments[assignments.length-1].due_date }}</p>
+                                    </ng-container>
+                                    <ng-container *ngIf="assignments.length === 0">
+                                        N/A
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>
@@ -252,19 +272,23 @@
 
                 <div class="d-flex justify-content-between pb-3">
                     <strong>Next Assignment Due:</strong>
-                    <div>
-                        <p>Homework 1</p>
-                        <p>Homework 2</p>
-                    </div>
+                    <ng-container *ngIf="nextAssignment">
+                        <p>{{ nextAssignment.assignment_name }} (Due Date: {{ nextAssignment.due_date }})</p>
+                    </ng-container>
+                    <ng-container *ngIf="!nextAssignment">
+                        N/A
+                    </ng-container>
                 </div>
                 <hr>
 
                 <div class="d-flex justify-content-between">
                     <strong>Recently Assigned:</strong>
-                    <div>
-                        <p>Homework 1</p>
-                        <p>Homework 2</p>
-                    </div>
+                    <ng-container *ngIf="assignments.length">
+                        <p>{{ assignments[assignments.length-1].assignment_name }} (Due Date: {{ assignments[assignments.length-1].due_date }})</p>
+                    </ng-container>
+                    <ng-container *ngIf="assignments.length === 0">
+                        N/A
+                    </ng-container>
                 </div>
                 <hr>
             </div>
