@@ -4,6 +4,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Observable, forkJoin, from, of, switchMap, tap } from 'rxjs';
 import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
+import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { DeleteRosterButtonComponent } from 'src/app/components/modals/delete-roster/delete-roster-button.component';
 import { ModifyRosterButtonComponent } from 'src/app/components/modals/modify-roster/modify-roster-button.component';
 import { CognitoService } from 'src/app/services/cognito.service';
@@ -44,8 +45,9 @@ export class CourseComponent implements OnInit {
   ];
 
   public assignmentsColumnDefs: ColDef[] = [
-    { field: 'assignmentName', headerName: "Assignment Name" },
-    { field: 'dueDate', headerName: "Due Date" }
+    { field: 'assignment_name', headerName: "Assignment Name" },
+    { field: 'due_date', headerName: "Due Date" },
+    { headerName: "", cellRenderer: AssignmentDetailModalButtonComponent }
   ]
 
   public submissionColumnDefs: ColDef[] = [
@@ -84,7 +86,7 @@ export class CourseComponent implements OnInit {
     this.gridStorageService.listen$(GRID_STORAGE.refresh).subscribe(() => {
       this.refreshData();
       this.refreshSubmissionData();
-      this.refreshSubmissionData();
+      this.refreshAssignmentsData();
       this.fetchClassData();
     })
 
