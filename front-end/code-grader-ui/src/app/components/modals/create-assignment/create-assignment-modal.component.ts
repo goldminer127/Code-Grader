@@ -2,8 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
+import { of, switchMap } from 'rxjs';
 import { CourseService } from 'src/app/services/course.service';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
+import { S3StorageService } from 'src/app/services/s3-storage.service';
 
 @Component({
   selector: 'app-create-assignment-modal',
@@ -12,20 +14,23 @@ import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.
 })
 export class CreateAssignmentModalComponent implements OnInit {
   @ViewChild('closeModal') closeModal: ElementRef | undefined;
+  @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   isLoading = false;
   createSuccess = false;
   classId: any;
+  file: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private courseService: CourseService,
     private activatedRoute: ActivatedRoute,
-    private gridStorageService: GridStorageService
-  ){}
+    private gridStorageService: GridStorageService,
+    private s3Service: S3StorageService
+  ) { }
 
   ngOnInit(): void {
-        this.activatedRoute.params.subscribe((params: any) => {
+    this.activatedRoute.params.subscribe((params: any) => {
       this.classId = params.classId;
     })
   }
@@ -38,6 +43,7 @@ export class CreateAssignmentModalComponent implements OnInit {
 
   closeModalClick(): void {
     this.createSuccess = false;
+    this.fileInput && (this.fileInput.nativeElement.value = "");
     this.createAssignmentForm.controls.assignmentName.setValue('');
     this.createAssignmentForm.controls.description.setValue('');
     this.createAssignmentForm.controls.dueDate.setValue(null);
@@ -48,7 +54,21 @@ export class CreateAssignmentModalComponent implements OnInit {
     this.isLoading = true;
     const dueDate = moment(this.createAssignmentForm.value.dueDate);
     this.createAssignmentForm.controls.dueDate.setValue(dueDate.endOf('day').toISOString() as any);
-    this.courseService.createAssignment(this.classId, this.createAssignmentForm.value.assignmentName, this.createAssignmentForm.value.dueDate, this.createAssignmentForm.value.description).subscribe(()=>{
+    this.courseService.createAssignment(
+      this.classId, 
+      this.createAssignmentForm.value.assignmentName, 
+      this.createAssignmentForm.value.dueDate, 
+      this.createAssignmentForm.value.description
+      ).pipe(
+        switchMap((assignmentId:any)=>{
+          this.file && (
+            this.s3Service.uploadRubric(this.classId, this.file, `${assignmentId} - ${this.createAssignmentForm.value.assignmentName}`, this.file.name)
+          )
+
+          return of(true);
+        })
+      )
+      .subscribe(() => {
       this.isLoading = false;
       this.createSuccess = true;
       this.gridStorageService.emit$(GRID_STORAGE.refresh, true);
@@ -57,5 +77,9 @@ export class CreateAssignmentModalComponent implements OnInit {
 
   buttonDisabled(): boolean {
     return this.createAssignmentForm.value.assignmentName === '' || this.createAssignmentForm.value.dueDate === null;
+  }
+
+  onFileChange(event: any) {
+    this.file = event.target.files[0];
   }
 }

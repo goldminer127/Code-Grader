@@ -149,7 +149,9 @@ export class CourseService {
       assignmentName: assignmentName,
       dueDate: dueDate,
       description: description
-    })
+    }).pipe(
+      map((data:any)=> data.message.result.assignment_id)
+    )
   }
 
   getAssignmentsForClass(classId: string) : Observable<any> {

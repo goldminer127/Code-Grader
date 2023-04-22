@@ -34,7 +34,7 @@
 
                                 <div class="mb-3">
                                     <label for="formFile" class="form-label">Assignment Rubric</label>
-                                    <input class="form-control" type="file" id="formFile" [disabled]="createSuccess">
+                                    <input #fileInput (change)="onFileChange($event)" class="form-control" type="file" id="formFile" [disabled]="createSuccess">
                                 </div>
 
                                 <ng-container *ngIf="!createSuccess">

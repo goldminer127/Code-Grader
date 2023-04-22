@@ -1,0 +1,90 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="assignmentDetailModal" tabindex="-1" role="dialog" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assignment Details</h5>
+                    <button type="button" class="close" (click)="closeModalClick()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-bold">Assignment Name:</p>
+                            <p>{{rowData?.assignment_name}}</p>
+                        </div>
+                        <hr>
+
+                        <div >
+                            <p class="fw-bold">Description:</p>
+                            <br/>
+                            <ng-container *ngIf="rowData?.description.length > 0">
+                                <p>{{rowData.description}}</p>
+                            </ng-container>
+                            <ng-container *ngIf="rowData?.description.length === 0">
+                                <p>N/A</p>
+                            </ng-container>
+                        </div>
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-bold">Rubric:</p>
+                            <ng-container *ngIf="rubricExist">
+                                <p>
+                                    <a [href]="signedUrl" target="_blank" rel="noreferrer">
+                                        Download Rubric
+                                    </a>
+                                </p>
+                            </ng-container>
+                            <ng-container *ngIf="!rubricExist">
+                                <p>N/A</p>
+                            </ng-container>
+                        </div>
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-bold">Due Date:</p>
+                            <div>
+                                <p>{{ rowData?.due_date }}</p>
+                                <p>{{calendarDate}}</p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div>
+                            <div class="mb-3">
+                                <ng-container *ngIf="!pastDue">
+                                    <label for="formFileMultiple" class="form-label fw-bold">Submit Assignment Files</label>
+                                    <input #fileInput (change)="onFileChange($event)" [disabled]="pastDue" class="form-control" type="file" id="formFileMultiple" multiple>
+
+                                    <ng-container *ngIf="files?.length">
+                                        <div class="my-3" *ngFor="let file of files">
+                                            <p>{{file.name}}</p>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="pastDue">
+                                    <p class="fw-bold">Submit Assignment Files</p>
+                                    <div class="alert alert-danger" role="alert">
+                                        Due Date has passed.
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <button *ngIf="!pastDue" [disabled]="!files?.length ?? false" type="button" class="btn btn-outline-primary btn-sm float-end">
+                                Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeModalClick()">Close</button>
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary"
+                        data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
