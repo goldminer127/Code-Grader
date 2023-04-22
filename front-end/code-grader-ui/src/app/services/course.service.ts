@@ -4,6 +4,7 @@ import { from, map, Observable, of, switchMap } from 'rxjs';
 import { BASE_API_URL, PILLS } from '../app.constants';
 import { courseMapper } from './mappers/courses.mapper';
 import { UserService } from './user.service';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -111,28 +112,6 @@ export class CourseService {
     )
   }
 
-  getAssignmentsForClass(classId: string): Observable<any> {
-    return of(
-      [
-        {
-          assignmentName: "Homework 1",
-          dueDate: "1/1/2023",
-        },
-        {
-          assignmentName: "Homework 2",
-          dueDate: "2/2/2023",
-        },
-        {
-          assignmentName: "Homework 3",
-          dueDate: "4/11/2023",
-        },
-        {
-          assignmentName: "Homework 4",
-          dueDate: "4/11/2023"
-        }
-      ]
-    )
-  }
 
   getSubmissionsForClass(classId: string): Observable<any> {
     return of(
@@ -162,5 +141,25 @@ export class CourseService {
       classId: classId,
       userId: userId
     })
+  }
+
+  createAssignment(classId: string, assignmentName: string, dueDate: string, description: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/assignment/create`, {
+      classId: classId,
+      assignmentName: assignmentName,
+      dueDate: dueDate,
+      description: description
+    })
+  }
+
+  getAssignmentsForClass(classId: string) : Observable<any> {
+    return this.http.get(`${BASE_API_URL}/assignment/${classId}`).pipe(
+      map((data:any)=> data.message.result),
+      map((data:any)=> {
+        return data.map((x:any)=>{
+          return {...x, due_date: moment(x.due_date).format('MMMM Do YYYY, h:mm A'), isoDueDate: x.due_date}
+        })
+      })
+    )
   }
 }
