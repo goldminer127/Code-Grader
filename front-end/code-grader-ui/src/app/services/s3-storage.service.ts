@@ -15,9 +15,38 @@ export class S3StorageService {
     });
   }
 
-  uploadAssignments(classId: string, name: string, assignment: string, fileName: string, file: File): Observable<any> {
-    //Class ID - Assignment ID + Assignment Name - Student Name - File Name
-    return from(Storage.put(`${classId}/${assignment}/${name}/${fileName}`, file))
+  assignmentSubmission(files: any[], classId: string, assignmentName: string, userId: string): Observable<any> {
+    //Remove All Files from this assignment
+    return this.listFilesForAssignment(classId, userId, assignmentName).pipe(
+      switchMap((filesArr: any) => {
+        if (filesArr.results.length > 0) {
+          console.log(filesArr.results.map((result:any)=> result.key))
+          return this.removeFiles(filesArr.results.map((result:any)=> result.key)).pipe(
+            switchMap(()=>{
+              return this.uploadAssignments(files, classId, assignmentName, userId);
+            })
+          )
+        }else{
+          return this.uploadAssignments(files, classId, assignmentName, userId);
+        }
+      })
+    )
+    //Then upload new files
+  }
+
+  uploadAssignment(classId: string, userId: string, assignment: string, fileName: string, file: File): Observable<any> {
+    //Class ID - Assignment ID + Assignment Name - Student ID - File Name
+    return from(Storage.put(`${classId}/${assignment}/${userId}/${fileName}`, file))
+  }
+
+  uploadAssignments(files: any[], classId: string, assignmentName: string, userId: string): Observable<any> {
+    const uploadedFiles: Observable<any>[] = [];
+
+    Array.from(files).forEach(file => {
+      uploadedFiles.push(this.uploadAssignment(classId, userId, assignmentName, file.name, file));
+    })
+
+    return combineLatest(uploadedFiles);
   }
 
   uploadRubric(classId: string, file: File, assignment: string, fileName: string): Observable<any> {
@@ -32,7 +61,7 @@ export class S3StorageService {
   getRubric(classId: string, assignment: string): Observable<any> {
     //Class ID - Assignment ID + Assignment Name - Rubric - File Name
     return from(Storage.list(`${classId}/${assignment}/Rubric`)).pipe(
-      switchMap((data:any)=>{
+      switchMap((data: any) => {
         return data.results[0]?.key ? from(Storage.get(data?.results[0]?.key)) : of(false)
       })
     )
@@ -42,28 +71,28 @@ export class S3StorageService {
     //TODO
   }
 
-  listFilesForAssignment(className: string, name: string, assignmentName: string): Observable<any> {
-    return from(Storage.list(`${className}/${name}/${assignmentName}`));
+  listFilesForAssignment(classId: string, userId: string, assignmentName: string): Observable<any> {
+    return from(Storage.list(`${classId}/${assignmentName}/${userId}`));
   }
 
   fetchFilesForAssignment(fileNames: string[]): Observable<any> {
-    const arrayOfFiles : Observable<any>[] = [];
-    
-    fileNames.forEach((fileName : string)=> {
-      arrayOfFiles.push(from(Storage.get(fileName, {download: true})));
+    const arrayOfFiles: Observable<any>[] = [];
+
+    fileNames.forEach((fileName: string) => {
+      arrayOfFiles.push(from(Storage.get(fileName, { download: true })));
     })
 
     return combineLatest(arrayOfFiles);
   }
 
-  removeFiles(fileNames: string[]): Observable<any>[] {
-    const removalObservables : Observable<any>[] = [];
+  removeFiles(fileNames: string[]): Observable<any> {
+    const removalObservables: Observable<any>[] = [];
 
-    fileNames.forEach((fileName : string)=> {
+    fileNames.forEach((fileName: string) => {
       removalObservables.push(from(Storage.remove(fileName)));
     })
 
-    return removalObservables;
+    return combineLatest(removalObservables);
   }
 
 }

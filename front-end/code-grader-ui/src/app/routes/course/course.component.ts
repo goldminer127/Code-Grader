@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import * as moment from 'moment';
-import { Observable, forkJoin, from, of, switchMap, tap } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { DeleteRosterButtonComponent } from 'src/app/components/modals/delete-roster/delete-roster-button.component';
@@ -12,6 +12,7 @@ import { CognitoService } from 'src/app/services/cognito.service';
 import { CourseService } from 'src/app/services/course.service';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { USER_STORAGE, UserStorageService } from 'src/app/services/user-storage.service';
 
 @Component({
   selector: 'app-course',
@@ -54,8 +55,8 @@ export class CourseComponent implements OnInit {
   ]
 
   public submissionColumnDefs: ColDef[] = [
-    { field: 'assignmentName', headerName: "Assignment Name" },
-    { field: 'date', headerName: "Submission Date" }
+    { field: 'assignment_name', headerName: "Assignment Name" },
+    { field: 'submission_date', headerName: "Submission Date" }
   ]
 
   // DefaultColDef sets props common to all Columns
@@ -76,7 +77,8 @@ export class CourseComponent implements OnInit {
     private courseService: CourseService,
     private landingPageStorageService: LandingPageStorageService,
     private cognitoService: CognitoService,
-    private gridStorageService: GridStorageService
+    private gridStorageService: GridStorageService,
+    private userStorageService: UserStorageService
   ) { }
 
   ngOnInit(): void {
@@ -177,7 +179,7 @@ export class CourseComponent implements OnInit {
   }
 
   refreshSubmissionData(): void {
-    this.submissionRowData$ = this.courseService.getSubmissionsForClass(this.classId!);
+    this.submissionRowData$ = this.courseService.getAllSubmissions(this.user.userId, this.classId);
   }
 
   clearSelection(): void {
@@ -212,6 +214,17 @@ export class CourseComponent implements OnInit {
       }),
       switchMap(() => {
         return this.courseService.checkUserBelongsToCourse(this.user.email, this.classId!);
+      }),
+      switchMap((data:any)=>{
+        return this.courseService.getUser(this.user.email).pipe(
+          tap((res:any)=>{
+            this.user = {...this.user, userId: res.user_id};
+            this.userStorageService.set$(USER_STORAGE.USER, this.user);
+          }),
+          map(()=>{
+            return data;
+          })
+        )
       })
     ).subscribe((val: boolean | string) => {
       if (!val) {

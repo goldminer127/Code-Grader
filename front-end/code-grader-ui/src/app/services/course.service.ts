@@ -16,6 +16,12 @@ export class CourseService {
     private userService: UserService
   ) { }
 
+  getUser(email:string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/user/${email}`).pipe(
+      map((res:any)=> res.message.userInfo)
+    )
+  }
+
   getAllCourses(userId: string, activePill: string): Observable<any> {
     return this.http.get(`${BASE_API_URL}/class/all/${userId}`).pipe(
       map((data: any) => {
@@ -160,6 +166,26 @@ export class CourseService {
       map((data:any)=> {
         return data.map((x:any)=>{
           return {...x, due_date: moment(x.due_date).format('MMMM Do YYYY, h:mm A'), isoDueDate: x.due_date}
+        })
+      })
+    )
+  }
+
+  insertSubmission(classId: string, assignmentId: string, userId: string, submissionDate: string, bucketKeys: string[]): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/assignment/submission`, {
+      classId: classId, 
+      assignmentId: assignmentId,
+      userId: userId,
+      submissionDate: submissionDate,
+      bucketKey: bucketKeys
+    })
+  }
+
+  getAllSubmissions(userId: string, classId: string): Observable<any> {
+    return this.http.get(`${BASE_API_URL}/submissions/${userId}/${classId}`).pipe(
+      map((res:any)=> {
+        return res.message.result.map((x:any)=>{
+          return {...x, submission_date: moment(x.submission_date).format('MMMM Do YYYY, h:mm A'), isoSubmissionDate: x.submission_date}
         })
       })
     )

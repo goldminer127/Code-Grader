@@ -57,7 +57,7 @@
                             <div class="mb-3">
                                 <ng-container *ngIf="!pastDue">
                                     <label for="formFileMultiple" class="form-label fw-bold">Submit Assignment Files</label>
-                                    <input #fileInput (change)="onFileChange($event)" [disabled]="pastDue" class="form-control" type="file" id="formFileMultiple" multiple>
+                                    <input #fileInput (change)="onFileChange($event)" [disabled]="pastDue || uploadSuccess" class="form-control" type="file" id="formFileMultiple" multiple>
 
                                     <ng-container *ngIf="files?.length">
                                         <div class="my-3" *ngFor="let file of files">
@@ -71,10 +71,28 @@
                                         Due Date has passed.
                                     </div>
                                 </ng-container>
+                                <ng-container *ngIf="previousUploaded && !uploadSuccess">
+                                    <div class="pt-3">
+                                        <div class="alert alert-warning" role="alert">
+                                            Warning: Submission files found. New Submissions will replace these files!
+                                        </div>
+                                    </div>
+                                </ng-container>
                             </div>
-                            <button *ngIf="!pastDue" [disabled]="!files?.length ?? false" type="button" class="btn btn-outline-primary btn-sm float-end">
-                                Upload
+                            <button *ngIf="!pastDue && !uploadSuccess" (click)="onSubmit()" [disabled]="!buttonDisabled()" type="button" class="btn btn-outline-primary btn-sm float-end">
+                                {{isLoading ? '' : 'Upload'}}
+                                <div *ngIf="isLoading">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                </div>
                             </button>
+                            <ng-container *ngIf="uploadSuccess">
+                                <div class="pt-3">
+                                    <p class="alert alert-success" role="alert">
+                                        Successfully Uploaded! <br>
+                                    </p>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
