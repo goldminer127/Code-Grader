@@ -71,7 +71,7 @@ export class LandingPageComponent implements OnInit {
 
     // this.filesToUpload.forEach((file)=>{})
     Array.from(this.filesToUpload).forEach(file => {
-      uploadedFilesReceipt.push(this.s3StorageService.uploadAssignments('CSI-404','Cheung Matthew', 'Assignment 1 - Testing', file.name, file));
+      uploadedFilesReceipt.push(this.s3StorageService.uploadAssignment('CSI-404','Cheung Matthew', 'Assignment 1 - Testing', file.name, file));
     });
 
     combineLatest(uploadedFilesReceipt).subscribe((files)=>{

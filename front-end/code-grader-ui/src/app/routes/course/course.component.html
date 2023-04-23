@@ -104,10 +104,25 @@
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="d-flex justify-content-between">
-                                    <strong>Submissions:</strong>
+                                    <strong>Recently Submitted:</strong>
                                     <div>
-                                        <p>Homework 1</p>
-                                        <p>Homework 2</p>
+                                        <ng-container *ngIf="recentSubmission">
+                                            <p>{{ recentSubmission.assignment_name }}</p>
+                                        </ng-container>
+                                        <ng-container *ngIf="!recentSubmission">
+                                            <p>N/A</p>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Submission Date:</strong>
+                                    <div>
+                                        <ng-container *ngIf="recentSubmission">
+                                            <p>{{ recentSubmission.submission_date }}</p>
+                                        </ng-container>
+                                        <ng-container *ngIf="!recentSubmission">
+                                            <p>N/A</p>
+                                        </ng-container>
                                     </div>
                                 </div>
                             </div>
@@ -287,6 +302,17 @@
                         <p>{{ assignments[assignments.length-1].assignment_name }} (Due Date: {{ assignments[assignments.length-1].due_date }})</p>
                     </ng-container>
                     <ng-container *ngIf="assignments.length === 0">
+                        N/A
+                    </ng-container>
+                </div>
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <strong>Recent Submission:</strong>
+                    <ng-container *ngIf="recentSubmission">
+                        <p>{{  recentSubmission.assignment_name }} (Submission Date: {{ recentSubmission.submission_date }})</p>
+                    </ng-container>
+                    <ng-container *ngIf="!recentSubmission">
                         N/A
                     </ng-container>
                 </div>

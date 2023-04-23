@@ -31,6 +31,7 @@ export class CourseComponent implements OnInit {
   pendingCount: number | undefined;
   assignments: any[];
   nextAssignment: any;
+  recentSubmission: any;
 
   date = new Date().toLocaleString();
 
@@ -93,6 +94,7 @@ export class CourseComponent implements OnInit {
       this.refreshSubmissionData();
       this.refreshAssignmentsData();
       this.fetchClassData();
+      this.validateUserCheck();
     })
 
     this.fetchClassData();
@@ -224,6 +226,14 @@ export class CourseComponent implements OnInit {
           map(()=>{
             return data;
           })
+        )
+      }),
+      switchMap((data:any)=>{
+        return this.courseService.getAllSubmissions(this.user.userId, this.classId).pipe(
+          tap((res:any)=> {
+            this.recentSubmission = res[res.length-1];
+          }),
+          map(()=>data)
         )
       })
     ).subscribe((val: boolean | string) => {

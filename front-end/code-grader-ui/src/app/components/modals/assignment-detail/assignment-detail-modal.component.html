@@ -20,10 +20,10 @@
 
                         <div >
                             <p class="fw-bold">Description:</p>
-                            <ng-container *ngIf="rowData?.description.length > 0">
+                            <ng-container *ngIf="rowData?.description?.length > 0">
                                 <p>{{rowData.description}}</p>
                             </ng-container>
-                            <ng-container *ngIf="rowData?.description.length === 0">
+                            <ng-container *ngIf="rowData?.description?.length === 0">
                                 <p>N/A</p>
                             </ng-container>
                         </div>

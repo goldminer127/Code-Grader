@@ -68,6 +68,7 @@ export class AssignmentDetailModalComponent implements OnInit {
     this.files = undefined;
     this.isLoading = false;
     this.uploadSuccess = false;
+    this.previousUploaded = false;
     this.fileInput && (this.fileInput.nativeElement.value = "");
 
     this.closeModal!.nativeElement.click();
@@ -91,6 +92,7 @@ export class AssignmentDetailModalComponent implements OnInit {
       .subscribe(() => {
       this.isLoading = false;
       this.uploadSuccess = true;
+      this.gridStorageService.emit$(GRID_STORAGE.refresh, true);
     })
   }
 
