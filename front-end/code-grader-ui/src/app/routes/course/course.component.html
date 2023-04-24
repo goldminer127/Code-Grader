@@ -358,12 +358,15 @@
 
                 <div>
                     <app-grid
+                    [hidden]="viewSubmission"
                     [columnDefs]="submissionColumnDefs" 
                     [defaultColDef]="defaultColDef" 
                     [rowData$]="submissionRowData$"
                     (gridReadyEvent)="onSubmissionGridReady($event)" 
                     (cellClickedEvent)="onCellClicked($event)"
                     ></app-grid>
+
+                    <app-submission-view *ngIf="viewSubmission"></app-submission-view>
                 </div>
             </div>
 

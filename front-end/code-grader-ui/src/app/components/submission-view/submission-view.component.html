@@ -1,0 +1,27 @@
+<div class="pt-3" style="height: 70vh">
+    
+    <div class="d-flex justify-content-between">
+        <div class="pb-4">
+            <button type="button" class="btn btn-outline-primary" (click)="backToSubmission()">
+                <i class="bi bi-arrow-left-square"></i> Back to All Submissions
+            </button>
+        </div>
+
+        <div>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedFile" (change)="changeFileClick()" aria-label=".form-select-sm example">
+                <option *ngFor="let file of files" [value]="file.fileName">{{file.fileName}}</option>
+            </select>
+        </div>
+    </div>
+
+
+    <ngs-code-editor 
+    style="height: 100%" 
+    [readOnly]="true" 
+    [theme]="theme" 
+    [codeModel]="codeModel" 
+    [options]="options"
+    (valueChanged)="onCodeChanged($event)"
+    >
+    </ngs-code-editor>
+</div>

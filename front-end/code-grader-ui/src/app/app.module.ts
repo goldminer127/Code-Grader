@@ -38,6 +38,11 @@ import { CreateAssignmentModalButtonComponent } from './components/modals/create
 import { CreateAssignmentModalComponent } from './components/modals/create-assignment/create-assignment-modal.component';
 import { AssignmentDetailModalButtonComponent } from './components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { AssignmentDetailModalComponent } from './components/modals/assignment-detail/assignment-detail-modal.component';
+import { ViewSubmissionButtonComponent } from './components/modals/submission/view-submission-button.component';
+import { ViewSubmissionModalComponent } from './components/modals/submission/view-submission-modal.component';
+
+import { CodeEditorModule } from '@ngstack/code-editor';
+import { SubmissionViewComponent } from './components/submission-view/submission-view.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +72,10 @@ import { AssignmentDetailModalComponent } from './components/modals/assignment-d
     CreateAssignmentModalButtonComponent,
     CreateAssignmentModalComponent,
     AssignmentDetailModalButtonComponent,
-    AssignmentDetailModalComponent
+    AssignmentDetailModalComponent,
+    ViewSubmissionButtonComponent,
+    ViewSubmissionModalComponent,
+    SubmissionViewComponent
   ],
   imports: [
     BrowserModule,
@@ -77,6 +85,7 @@ import { AssignmentDetailModalComponent } from './components/modals/assignment-d
     ReactiveFormsModule,
     AgGridModule,
     HttpClientModule,
+    CodeEditorModule.forRoot()
   ],
   providers: [
     LandingPageStorageService,

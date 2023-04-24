@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CodeModel } from '@ngstack/code-editor';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import * as moment from 'moment';
@@ -8,6 +9,7 @@ import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
 import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { DeleteRosterButtonComponent } from 'src/app/components/modals/delete-roster/delete-roster-button.component';
 import { ModifyRosterButtonComponent } from 'src/app/components/modals/modify-roster/modify-roster-button.component';
+import { ViewSubmissionButtonComponent } from 'src/app/components/modals/submission/view-submission-button.component';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { CourseService } from 'src/app/services/course.service';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
@@ -33,6 +35,8 @@ export class CourseComponent implements OnInit {
   nextAssignment: any;
   recentSubmission: any;
 
+  viewSubmission = false;
+
   date = new Date().toLocaleString();
 
   courseState: COURSE_STATE = COURSE_STATE.OVERVIEW;
@@ -57,7 +61,8 @@ export class CourseComponent implements OnInit {
 
   public submissionColumnDefs: ColDef[] = [
     { field: 'assignment_name', headerName: "Assignment Name" },
-    { field: 'submission_date', headerName: "Submission Date" }
+    { field: 'submission_date', headerName: "Submission Date" },
+    { headerName: "", cellRenderer: ViewSubmissionButtonComponent }
   ]
 
   // DefaultColDef sets props common to all Columns
@@ -95,6 +100,10 @@ export class CourseComponent implements OnInit {
       this.refreshAssignmentsData();
       this.fetchClassData();
       this.validateUserCheck();
+    })
+
+    this.gridStorageService.listen$(GRID_STORAGE.viewSubmission).subscribe((val:boolean)=>{
+      this.viewSubmission = val;
     })
 
     this.fetchClassData();
