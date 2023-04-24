@@ -39,7 +39,6 @@ import { CreateAssignmentModalComponent } from './components/modals/create-assig
 import { AssignmentDetailModalButtonComponent } from './components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { AssignmentDetailModalComponent } from './components/modals/assignment-detail/assignment-detail-modal.component';
 import { ViewSubmissionButtonComponent } from './components/modals/submission/view-submission-button.component';
-import { ViewSubmissionModalComponent } from './components/modals/submission/view-submission-modal.component';
 
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { SubmissionViewComponent } from './components/submission-view/submission-view.component';
@@ -74,7 +73,6 @@ import { SubmissionViewComponent } from './components/submission-view/submission
     AssignmentDetailModalButtonComponent,
     AssignmentDetailModalComponent,
     ViewSubmissionButtonComponent,
-    ViewSubmissionModalComponent,
     SubmissionViewComponent
   ],
   imports: [

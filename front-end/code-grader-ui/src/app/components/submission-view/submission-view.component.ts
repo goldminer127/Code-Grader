@@ -4,6 +4,7 @@ import { DarkModeService } from 'angular-dark-mode';
 import { switchMap, from, combineLatest, Observable, map } from 'rxjs';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
 import { S3StorageService } from 'src/app/services/s3-storage.service';
+import { LanguageExtMap } from 'src/app/languageExtMap';
 
 @Component({
   selector: 'app-submission-view',
@@ -68,14 +69,10 @@ export class SubmissionViewComponent implements OnInit {
       })
     ).subscribe((res: any) => {
       this.files = res;
-      this.codeModel = { ...this.codeModel, value: res[0].text, language: '', uri: res[0].fileName }
       this.selectedFile = res[0].fileName;
+      this.codeModel = { ...this.codeModel, value: res[0].text, language: this.getLanguageFromFileExtension(), uri: res[0].fileName }
     })
 
-  }
-
-  onCodeChanged(value: any) {
-    console.log('CODE', value);
   }
 
   getFileName(bucketKey: string): string {
@@ -88,6 +85,12 @@ export class SubmissionViewComponent implements OnInit {
   }
 
   changeFileClick(): void {
-    this.codeModel = {...this.codeModel, value: this.files.find((file:any)=> file.fileName === this.selectedFile).text, uri: this.files.find((file:any)=> file.fileName === this.selectedFile).fileName}
+    const lang = this.getLanguageFromFileExtension();
+    this.codeModel = {...this.codeModel, value: this.files.find((file:any)=> file.fileName === this.selectedFile).text, language: lang.toString().toLowerCase(), uri: this.files.find((file:any)=> file.fileName === this.selectedFile).fileName}
+  }
+
+  getLanguageFromFileExtension(): string {
+    const ext = this.selectedFile.split(".");
+    return LanguageExtMap[`.${ext[ext.length-1]}` as keyof Object].toString().toLowerCase();
   }
 }
