@@ -4,7 +4,8 @@ import { StorageService } from './storage.service';
 export enum GRID_STORAGE {
     selectedRowData = 'selectedRowData',
     refresh = 'refresh',
-    viewSubmission = 'viewSubmission'
+    viewSubmission = 'viewSubmission',
+    viewGrading = 'viewGrading'
 }
 
 @Injectable({ providedIn: 'root' })
@@ -16,4 +17,5 @@ interface GridStorage {
     [GRID_STORAGE.selectedRowData] : any;
     [GRID_STORAGE.refresh] : any;
     [GRID_STORAGE.viewSubmission]: any;
+    [GRID_STORAGE.viewGrading]: any;
 }

@@ -43,6 +43,8 @@ import { ViewSubmissionButtonComponent } from './components/modals/submission/vi
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { SubmissionViewComponent } from './components/submission-view/submission-view.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { GradingViewButtonComponent } from './components/grading-view/grading-view-button.component';
+import { GradingViewComponent } from './components/grading-view/grading-view.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,9 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     AssignmentDetailModalButtonComponent,
     AssignmentDetailModalComponent,
     ViewSubmissionButtonComponent,
-    SubmissionViewComponent
+    SubmissionViewComponent,
+    GradingViewButtonComponent,
+    GradingViewComponent
   ],
   imports: [
     BrowserModule,

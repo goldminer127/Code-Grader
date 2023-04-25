@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { DarkModeService } from 'angular-dark-mode';
-import { switchMap, from, combineLatest, Observable, map, tap, of } from 'rxjs';
+import { DiffEditorModel } from 'ngx-monaco-editor-v2';
+import { Observable, combineLatest, from, map, of, switchMap, tap } from 'rxjs';
+import { LanguageExtMap } from 'src/app/languageExtMap';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
 import { S3StorageService } from 'src/app/services/s3-storage.service';
-import { LanguageExtMap } from 'src/app/languageExtMap';
-import { DiffEditorModel } from 'ngx-monaco-editor-v2';
 import { USER_STORAGE, UserStorageService } from 'src/app/services/user-storage.service';
 
 @Component({
-  selector: 'app-submission-view',
-  templateUrl: './submission-view.component.html',
-  styleUrls: ['./submission-view.component.scss']
+  selector: 'app-grading-view',
+  templateUrl: './grading-view.component.html',
+  styleUrls: ['./grading-view.component.scss']
 })
-export class SubmissionViewComponent implements OnInit {
+export class GradingViewComponent implements OnInit {
 
   options = {
-    theme: 'vs-dark',
-    readOnly: true
+    theme: 'vs-dark'
   };
 
   originalModel: DiffEditorModel = {
@@ -95,37 +94,37 @@ export class SubmissionViewComponent implements OnInit {
             return res.results.map((file: any) => file.key);
           }),
           switchMap((files: any) => {
-            if(files.length > 0 ){
+            if (files.length > 0) {
               return this.s3Service.fetchFilesForAssignment(files)
-            }else{
+            } else {
               return of([]);
             }
           }),
           switchMap((x: any) => {
-            if(x.length > 0 ){
+            if (x.length > 0) {
               const arr: Observable<any>[] = [];
               x.forEach((y: any, index: number) => {
                 arr.push(from(y.Body.text()));
                 this.fileNames.push(this.getFileName(this.rowData.bucket_key[index]));
               })
-  
+
               return combineLatest(arr);
-            }else{
+            } else {
               return of([])
             }
 
           }),
           map((fileText: string[]) => {
-            if(fileText.length > 0){
+            if (fileText.length > 0) {
               const x = fileText.map((text: string, index: number) => {
                 return {
                   text: text,
                   fileName: this.fileNames[index]
                 }
               })
-      
+
               return x;
-            }else{
+            } else {
               return [];
             }
 
@@ -133,18 +132,21 @@ export class SubmissionViewComponent implements OnInit {
           tap((res: any) => {
             this.modifiedFiles = res;
 
-            const matchingFile = res.find((file:any)=> file.fileName === this.selectedFile);
+            const matchingFile = res.find((file: any) => file.fileName === this.selectedFile);
 
-            if(matchingFile){
-              this.modifiedModel = {...this.modifiedModel, code: res[0].text, language: this.getLanguageFromFileExtension()}
-            }else{
-              this.modifiedModel = {...this.modifiedModel, code: this.files[0].text, language: this.getLanguageFromFileExtension()}
+            if (matchingFile) {
+              this.modifiedModel = { ...this.modifiedModel, code: res[0].text, language: this.getLanguageFromFileExtension() }
+            } else {
+              this.modifiedModel = { ...this.modifiedModel, code: this.files[0].text, language: this.getLanguageFromFileExtension() }
             }
           })
         )
       }),
     ).subscribe()
+  }
 
+  back(): void {
+    this.gridStorageService.emit$(GRID_STORAGE.viewGrading, false);
   }
 
   getFileName(bucketKey: string): string {
@@ -152,8 +154,20 @@ export class SubmissionViewComponent implements OnInit {
     return x[x.length - 1];
   }
 
-  backToSubmission(): void {
-    this.gridStorageService.emit$(GRID_STORAGE.viewSubmission, false);
+  getLanguageFromFileExtension(): string {
+    const ext = this.selectedFile.split(".");
+    return LanguageExtMap[`.${ext[ext.length - 1]}` as keyof Object].toString().toLowerCase();
+  }
+
+  onInitDiffEditor(diffEditor: any) {
+    if (!diffEditor) {
+      return;
+    }
+
+    diffEditor.getModifiedEditor().onDidChangeModelContent(() => {
+      const content = diffEditor.getModel().modified.getValue();
+      this.modifiedContent = content;
+    });
   }
 
   changeFileClick(): void {
@@ -170,34 +184,65 @@ export class SubmissionViewComponent implements OnInit {
     }
   }
 
-  getLanguageFromFileExtension(): string {
-    const ext = this.selectedFile.split(".");
-    return LanguageExtMap[`.${ext[ext.length - 1]}` as keyof Object].toString().toLowerCase();
+  saveModification(): void {
+    this.modifiedButtonLoading = true;
+
+    const modifiedFile = this.modifiedFiles.find((file:any)=> file.fileName === this.selectedFile);
+    
+    if(modifiedFile){
+      modifiedFile.text = this.modifiedContent;
+    }else{
+      this.modifiedFiles.push({
+        fileName: this.selectedFile,
+        text: this.modifiedContent
+      })
+    }
+
+    const originalFile = this.bucketKeys.find((key: any) => {
+      const x = key.split("/");
+      return x[x.length - 1] === this.selectedFile
+    });
+
+    const fileExt = `.${this.getFileName(originalFile).split(".")[1]}`;
+
+    let blob = new Blob([this.modifiedContent], { type: fileExt })
+    const file = new File([blob], this.addModifiedToFilename(originalFile));
+
+    this.s3Service.uploadModifiedAssignment(
+      this.rowData.classInfo.class_id,
+      `${this.rowData.user_id}`,
+      `${this.rowData.assignment_id} - ${this.rowData.assignment_name}`,
+      this.selectedFile,
+      file
+    ).subscribe((res: any) => {
+      this.modifiedButtonLoading = false;
+    })
+
   }
 
-  //Class id / assignment id - assignment name/ user id / filename
-  addModifiedToFilename(path: string): string {
-    // Extract the path components by splitting the string using the '/' delimiter
-    const pathComponents = path.split('/');
-
-    // Get the last component, which is the file name
-    const fileName = pathComponents[pathComponents.length - 1];
-
-    // Separate the file name and its extension
-    const fileParts = fileName.split('.');
-    const fileBaseName = fileParts[0];
-    const fileExtension = fileParts[1];
-
-    // Add 'modified' to the file name
-    const newFileName = `modified/${fileBaseName}.${fileExtension}`;
-
-    // Replace the old file name with the new one in the path components array
-    pathComponents[pathComponents.length - 1] = newFileName;
-
-    // Join the path components back together using the '/' delimiter
-    const newPath = pathComponents.join('/');
-
-    return newPath;
-  }
+    //Class id / assignment id - assignment name/ user id / filename
+    addModifiedToFilename(path: string): string {
+      // Extract the path components by splitting the string using the '/' delimiter
+      const pathComponents = path.split('/');
+  
+      // Get the last component, which is the file name
+      const fileName = pathComponents[pathComponents.length - 1];
+  
+      // Separate the file name and its extension
+      const fileParts = fileName.split('.');
+      const fileBaseName = fileParts[0];
+      const fileExtension = fileParts[1];
+  
+      // Add 'modified' to the file name
+      const newFileName = `modified/${fileBaseName}.${fileExtension}`;
+  
+      // Replace the old file name with the new one in the path components array
+      pathComponents[pathComponents.length - 1] = newFileName;
+  
+      // Join the path components back together using the '/' delimiter
+      const newPath = pathComponents.join('/');
+  
+      return newPath;
+    }
 
 }
