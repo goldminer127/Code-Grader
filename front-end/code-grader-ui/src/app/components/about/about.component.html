@@ -1,1 +1,21 @@
-<p>about works!</p>
+<div class="container-fluid" #aboutContainer [ngClass]="{'light-mode-container': !darkMode, 'dark-mode-container': darkMode}">
+    <h1 class="text-center pt-5 text-decoration-underline">
+        About
+    </h1>
+
+    <div class="row py-5">
+        <div class="col-md-9 col-lg-8 mx-auto">
+            <p class="text-center">
+                Some random text that was put into this box because the developer didn't have any fun stories to write
+                as a place holder for this component. So the developer decided to be uncreative and just spit out random
+                words into this box that may or may not make any sense. 
+                So now you get to sit here and read some usless text, enjoy!
+            </p>
+        </div>
+
+        <div class="col-md-9 col-lg-8 mx-auto d-flex justify-content-center">
+            <img src="../../../assets/images/vectorstock.png" class=".img-fluid pt-5 mt-5 d-none d-md-block"
+                alt="People discussing at a table">
+        </div>
+    </div>
+</div>
