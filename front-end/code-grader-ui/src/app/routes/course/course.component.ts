@@ -230,7 +230,7 @@ export class CourseComponent implements OnInit {
         return this.courseService.getUser(this.user.email).pipe(
           tap((res:any)=>{
             this.user = {...this.user, userId: res.user_id};
-            this.userStorageService.set$(USER_STORAGE.USER, this.user);
+            this.userStorageService.set$(USER_STORAGE.USER, {...this.user, userRole: data});
           }),
           map(()=>{
             return data;
@@ -256,6 +256,8 @@ export class CourseComponent implements OnInit {
 
   onAccordionClick(state: string): void {
     this.courseState = this.courseState === state as COURSE_STATE ? COURSE_STATE.NO_STATE : state as COURSE_STATE;
+    this.gridStorageService.emit$(GRID_STORAGE.viewSubmission, false);
+    this.viewSubmission = false;
   }
 
 }

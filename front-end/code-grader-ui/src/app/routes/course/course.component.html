@@ -339,7 +339,7 @@
                 <hr>
 
                 <div class="py-4">
-                    <app-create-assignment-modal-button></app-create-assignment-modal-button>
+                    <app-create-assignment-modal-button *ngIf="!(userRole === 'student')"></app-create-assignment-modal-button>
                 </div>
                 <div>
                     <app-grid

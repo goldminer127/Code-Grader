@@ -11,16 +11,29 @@
             <select class="form-select form-select-sm" [(ngModel)]="selectedFile" (change)="changeFileClick()" aria-label=".form-select-sm example">
                 <option *ngFor="let file of files" [value]="file.fileName">{{file.fileName}}</option>
             </select>
+
+            <div *ngIf="userRole !== 'student'" class="pt-3">
+                <button type="button" [disabled]="!modifiedContent" class="btn btn-outline-primary" (click)="saveModification()">
+                    <i class="bi bi-save" *ngIf="!modifiedButtonLoading"></i> {{modifiedButtonLoading ? '' : 'Save Modification'}}
+                    <div *ngIf="modifiedButtonLoading">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 
+    <div class="d-flex justify-content-around py-3">
+        <h4>Student Submission</h4>
+        <h4>Modified Submission</h4>
+    </div>
 
-    <ngs-code-editor 
-    style="height: 100%" 
-    [readOnly]="true" 
-    [theme]="theme" 
-    [codeModel]="codeModel" 
-    [options]="options"
-    >
-    </ngs-code-editor>
+    <ngx-monaco-diff-editor 
+    class="pl-3"
+    style="height: 100%"
+    [options]="options" 
+    [originalModel]="originalModel" 
+    [modifiedModel]="modifiedModel"
+    (onInit)="onInitDiffEditor($event)"
+    ></ngx-monaco-diff-editor>
 </div>
