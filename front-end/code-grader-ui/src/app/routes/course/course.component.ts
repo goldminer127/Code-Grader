@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CodeModel } from '@ngstack/code-editor';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import * as moment from 'moment';
 import { Observable, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
+import { GradingViewButtonComponent } from 'src/app/components/grading-view/grading-view-button.component';
 import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { DeleteRosterButtonComponent } from 'src/app/components/modals/delete-roster/delete-roster-button.component';
 import { ModifyRosterButtonComponent } from 'src/app/components/modals/modify-roster/modify-roster-button.component';
@@ -36,6 +36,7 @@ export class CourseComponent implements OnInit {
   recentSubmission: any;
 
   viewSubmission = false;
+  viewGrading = false;
 
   date = new Date().toLocaleString();
 
@@ -65,6 +66,13 @@ export class CourseComponent implements OnInit {
     { headerName: "", cellRenderer: ViewSubmissionButtonComponent }
   ]
 
+  public gradingColumnDefs: ColDef[] = [
+    { field: 'assignment_name', headerName: "Assignment Name" },
+    { field: 'submission_date', headerName: "Submission Date" },
+    { field: 'submitter', headerName: "Student" },
+    { headerName: "", cellRenderer: GradingViewButtonComponent }
+  ]
+
   // DefaultColDef sets props common to all Columns
   public defaultColDef: ColDef = {
     sortable: true,
@@ -74,6 +82,7 @@ export class CourseComponent implements OnInit {
   public rowData$!: Observable<any[]>;
   public assignmentsRowData$!: Observable<any[]>;
   public submissionRowData$!: Observable<any[]>;
+  public gradingRowData$!: Observable<any[]>;
 
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
 
@@ -98,12 +107,17 @@ export class CourseComponent implements OnInit {
       this.refreshData();
       this.refreshSubmissionData();
       this.refreshAssignmentsData();
+      this.refreshGradingData();
       this.fetchClassData();
       this.validateUserCheck();
     })
 
     this.gridStorageService.listen$(GRID_STORAGE.viewSubmission).subscribe((val:boolean)=>{
       this.viewSubmission = val;
+    })
+
+    this.gridStorageService.listen$(GRID_STORAGE.viewGrading).subscribe((val:boolean)=>{
+      this.viewGrading = val;
     })
 
     this.fetchClassData();
@@ -165,6 +179,14 @@ export class CourseComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
+  onGradingGridReady(params: GridReadyEvent) {
+    this.refreshGradingData();
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+    this.gridApi.sizeColumnsToFit();
+  }
+
   // Consuming Grid Event
   onCellClicked(e: CellClickedEvent): void {
     this.gridStorageService.set$(
@@ -187,6 +209,10 @@ export class CourseComponent implements OnInit {
 
   refreshAssignmentsData(): void {
     this.assignmentsRowData$ = this.courseService.getAssignmentsForClass(this.classId!);
+  }
+
+  refreshGradingData(): void {
+    this.gradingRowData$ = this.courseService.getAllClassSubmissions(this.classId);
   }
 
   refreshSubmissionData(): void {
@@ -257,6 +283,8 @@ export class CourseComponent implements OnInit {
   onAccordionClick(state: string): void {
     this.courseState = this.courseState === state as COURSE_STATE ? COURSE_STATE.NO_STATE : state as COURSE_STATE;
     this.gridStorageService.emit$(GRID_STORAGE.viewSubmission, false);
+    this.gridStorageService.emit$(GRID_STORAGE.viewGrading, false);
+    this.viewGrading = false;
     this.viewSubmission = false;
   }
 

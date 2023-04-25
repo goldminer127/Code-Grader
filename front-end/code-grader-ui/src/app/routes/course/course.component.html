@@ -376,13 +376,16 @@
 
                 <div>
                     <app-grid
-                    [columnDefs]="columnDefs" 
+                    [hidden]="viewGrading"
+                    [columnDefs]="gradingColumnDefs" 
                     [defaultColDef]="defaultColDef" 
-                    [rowData$]="rowData$"
-                    (gridReadyEvent)="onGridReady($event)" 
+                    [rowData$]="gradingRowData$"
+                    (gridReadyEvent)="onGradingGridReady($event)" 
                     (cellClickedEvent)="onCellClicked($event)"
                     ></app-grid>
                 </div>
+
+                <app-grading-view *ngIf="viewGrading"></app-grading-view>
             </div>
             <!-- <p *ngIf="courseState === 'noState'">No State</p> -->
             <p *ngIf="courseState === 'settings'">Course Settings State</p>
