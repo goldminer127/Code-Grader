@@ -21,12 +21,14 @@ export class S3StorageService {
       switchMap((filesArr: any) => {
         if (filesArr.results.length > 0) {
           console.log(filesArr.results.map((result:any)=> result.key))
-          return this.removeFiles(filesArr.results.map((result:any)=> result.key)).pipe(
+          return this.removeFiles(filesArr.results.map((result:any)=> result.key))
+          .pipe(
             switchMap(()=>{
               return this.uploadAssignments(files, classId, assignmentName, userId);
             })
           )
-        }else{
+        }
+        else{
           return this.uploadAssignments(files, classId, assignmentName, userId);
         }
       })
@@ -37,6 +39,11 @@ export class S3StorageService {
   uploadAssignment(classId: string, userId: string, assignment: string, fileName: string, file: File): Observable<any> {
     //Class ID - Assignment ID + Assignment Name - Student ID - File Name
     return from(Storage.put(`${classId}/${assignment}/${userId}/${fileName}`, file))
+  }
+
+  uploadModifiedAssignment(classId: string, userId: string, assignment: string, fileName: string, file: File): Observable<any> {
+    //Class ID - Assignment ID + Assignment Name - Student ID - File Name
+    return from(Storage.put(`${classId}/${assignment}/${userId}/modified/${fileName}`, file))
   }
 
   uploadAssignments(files: any[], classId: string, assignmentName: string, userId: string): Observable<any> {
@@ -75,10 +82,14 @@ export class S3StorageService {
     return from(Storage.list(`${classId}/${assignmentName}/${userId}`));
   }
 
+  listFilesForModifiedAssignment(classId: string, userId: string, assignmentName: string): Observable<any> {
+    return from(Storage.list(`${classId}/${assignmentName}/${userId}/modified`));
+  }
+
   fetchFilesForAssignment(fileNames: string[]): Observable<any> {
     const arrayOfFiles: Observable<any>[] = [];
 
-    fileNames.forEach((fileName: string) => {
+    fileNames?.forEach((fileName: string) => {
       arrayOfFiles.push(from(Storage.get(fileName, { download: true })));
     })
 

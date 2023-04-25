@@ -42,6 +42,7 @@ import { ViewSubmissionButtonComponent } from './components/modals/submission/vi
 
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { SubmissionViewComponent } from './components/submission-view/submission-view.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { SubmissionViewComponent } from './components/submission-view/submission
     ReactiveFormsModule,
     AgGridModule,
     HttpClientModule,
-    CodeEditorModule.forRoot()
+    CodeEditorModule.forRoot(),
+    MonacoEditorModule.forRoot()
   ],
   providers: [
     LandingPageStorageService,
