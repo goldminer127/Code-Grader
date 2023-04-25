@@ -34,6 +34,7 @@ export class CourseComponent implements OnInit {
   assignments: any[];
   nextAssignment: any;
   recentSubmission: any;
+  needsGrading: any[];
 
   viewSubmission = false;
   viewGrading = false;
@@ -144,10 +145,12 @@ export class CourseComponent implements OnInit {
           classSize: this.courseService.getNumberOfStudentsForCourse(params.classId),
           roster: this.courseService.getRosterforClass(params.classId),
           pendingCount: this.courseService.getPendingCount(params.classId),
-          assignments: this.courseService.getAssignmentsForClass(params.classId)
+          assignments: this.courseService.getAssignmentsForClass(params.classId),
+          needsGrading: this.courseService.getAllClassSubmissions(params.classId)
         })
       })
     ).subscribe((data: any) => {
+      this.needsGrading = data.needsGrading;
       this.assignments = data.assignments;
       this.findNextAssignmentDue();
       this.classInfo = data.classInfo;
