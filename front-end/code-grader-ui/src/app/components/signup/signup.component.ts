@@ -15,7 +15,7 @@ export class SignupComponent implements OnInit {
   appname = APPLICATION_NAME;
   isLoading = false;
   emailAlreadyExist = false;
-  errorMessage = null;
+  errorMessage: string = null;
 
   constructor(
     private landingPageStorageService: LandingPageStorageService,

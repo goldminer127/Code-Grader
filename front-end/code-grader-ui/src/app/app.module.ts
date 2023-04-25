@@ -34,6 +34,14 @@ import { ModifyRosterComponent } from './components/modals/modify-roster/modify-
 import { ModifyRosterButtonComponent } from './components/modals/modify-roster/modify-roster-button.component';
 import { DeleteRosterButtonComponent } from './components/modals/delete-roster/delete-roster-button.component';
 import { DeleteRosterModalComponent } from './components/modals/delete-roster/delete-roster-modal.component';
+import { CreateAssignmentModalButtonComponent } from './components/modals/create-assignment/create-assignment-modal-button.component';
+import { CreateAssignmentModalComponent } from './components/modals/create-assignment/create-assignment-modal.component';
+import { AssignmentDetailModalButtonComponent } from './components/modals/assignment-detail/assignment-detail-modal-button.component';
+import { AssignmentDetailModalComponent } from './components/modals/assignment-detail/assignment-detail-modal.component';
+import { ViewSubmissionButtonComponent } from './components/modals/submission/view-submission-button.component';
+
+import { CodeEditorModule } from '@ngstack/code-editor';
+import { SubmissionViewComponent } from './components/submission-view/submission-view.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +67,13 @@ import { DeleteRosterModalComponent } from './components/modals/delete-roster/de
     ModifyRosterComponent,
     ModifyRosterButtonComponent,
     DeleteRosterButtonComponent,
-    DeleteRosterModalComponent
+    DeleteRosterModalComponent,
+    CreateAssignmentModalButtonComponent,
+    CreateAssignmentModalComponent,
+    AssignmentDetailModalButtonComponent,
+    AssignmentDetailModalComponent,
+    ViewSubmissionButtonComponent,
+    SubmissionViewComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +83,7 @@ import { DeleteRosterModalComponent } from './components/modals/delete-roster/de
     ReactiveFormsModule,
     AgGridModule,
     HttpClientModule,
+    CodeEditorModule.forRoot()
   ],
   providers: [
     LandingPageStorageService,
