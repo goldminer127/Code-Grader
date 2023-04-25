@@ -1,0 +1,69 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="createAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Assignment</h5>
+                    <button type="button" class="close" (click)="closeModalClick()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form [formGroup]="createAssignmentForm">
+                            <div class="mb-3">
+                                <label for="assignmentName" class="form-label">Assignment Name*</label>
+                                <input type="text" class="form-control" id="assignmentName" [readOnly]="createSuccess"
+                                    formControlName="assignmentName" required>
+                            </div>
+                            <div class="mb-3">
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" [readOnly]="createSuccess"
+                                        formControlName="description" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="assignmentDueDate" class="form-label">Due Date*</label>
+                                    <input type="date" class="form-control" id="assignmentDueDate"
+                                        [readOnly]="createSuccess" formControlName="dueDate" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label">Assignment Rubric</label>
+                                    <input #fileInput (change)="onFileChange($event)" class="form-control" type="file" id="formFile" [disabled]="createSuccess">
+                                </div>
+
+                                <ng-container *ngIf="!createSuccess">
+                                    <button type="submit" [disabled]="buttonDisabled()" class="btn btn-primary"
+                                        (click)="onSubmit()">
+                                        {{isLoading ? '' : 'Create Assignment'}}
+                                        <div *ngIf="isLoading">
+                                            <span class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>
+                                        </div>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *ngIf="createSuccess">
+                                    <div class="pt-3">
+                                        <p class="alert alert-success" role="alert">
+                                            Success: You've created an assignment! <br>
+                                        </p>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button #closeModal [hidden]="true" type="button" class="btn btn-primary"
+                        data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -15,8 +15,8 @@ export class ConfirmSignupComponent implements OnInit {
   confirmationCode = '';
   isLoading = false;
   isLoadingResend = false;
-  errorMessage = null;
-  errorMessageResend = null;
+  errorMessage : string = null;
+  errorMessageResend : string = null;
   successMessageResend = false;
   disableResend = false;
   successConfirm = false;

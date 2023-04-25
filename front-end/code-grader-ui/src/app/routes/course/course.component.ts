@@ -1,15 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CodeModel } from '@ngstack/code-editor';
 import { AgGridAngular } from 'ag-grid-angular';
 import { CellClickedEvent, ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Observable, forkJoin, from, of, switchMap, tap } from 'rxjs';
+import * as moment from 'moment';
+import { Observable, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { COURSE_STATE, LANDING_PAGE_STATE } from 'src/app/app.constants';
+import { AssignmentDetailModalButtonComponent } from 'src/app/components/modals/assignment-detail/assignment-detail-modal-button.component';
 import { DeleteRosterButtonComponent } from 'src/app/components/modals/delete-roster/delete-roster-button.component';
 import { ModifyRosterButtonComponent } from 'src/app/components/modals/modify-roster/modify-roster-button.component';
+import { ViewSubmissionButtonComponent } from 'src/app/components/modals/submission/view-submission-button.component';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { CourseService } from 'src/app/services/course.service';
 import { GRID_STORAGE, GridStorageService } from 'src/app/services/grid-storage.service';
 import { LandingPageStorageService, LANDING_PAGE_STORAGE } from 'src/app/services/landing-page.service';
+import { USER_STORAGE, UserStorageService } from 'src/app/services/user-storage.service';
 
 @Component({
   selector: 'app-course',
@@ -26,6 +31,11 @@ export class CourseComponent implements OnInit {
   classInfo: any | undefined;
   classSize: number | undefined;
   pendingCount: number | undefined;
+  assignments: any[];
+  nextAssignment: any;
+  recentSubmission: any;
+
+  viewSubmission = false;
 
   date = new Date().toLocaleString();
 
@@ -44,13 +54,15 @@ export class CourseComponent implements OnInit {
   ];
 
   public assignmentsColumnDefs: ColDef[] = [
-    { field: 'assignmentName', headerName: "Assignment Name" },
-    { field: 'dueDate', headerName: "Due Date" }
+    { field: 'assignment_name', headerName: "Assignment Name" },
+    { field: 'due_date', headerName: "Due Date" },
+    { headerName: "", cellRenderer: AssignmentDetailModalButtonComponent }
   ]
 
   public submissionColumnDefs: ColDef[] = [
-    { field: 'assignmentName', headerName: "Assignment Name" },
-    { field: 'date', headerName: "Submission Date" }
+    { field: 'assignment_name', headerName: "Assignment Name" },
+    { field: 'submission_date', headerName: "Submission Date" },
+    { headerName: "", cellRenderer: ViewSubmissionButtonComponent }
   ]
 
   // DefaultColDef sets props common to all Columns
@@ -71,7 +83,8 @@ export class CourseComponent implements OnInit {
     private courseService: CourseService,
     private landingPageStorageService: LandingPageStorageService,
     private cognitoService: CognitoService,
-    private gridStorageService: GridStorageService
+    private gridStorageService: GridStorageService,
+    private userStorageService: UserStorageService
   ) { }
 
   ngOnInit(): void {
@@ -84,8 +97,13 @@ export class CourseComponent implements OnInit {
     this.gridStorageService.listen$(GRID_STORAGE.refresh).subscribe(() => {
       this.refreshData();
       this.refreshSubmissionData();
-      this.refreshSubmissionData();
+      this.refreshAssignmentsData();
       this.fetchClassData();
+      this.validateUserCheck();
+    })
+
+    this.gridStorageService.listen$(GRID_STORAGE.viewSubmission).subscribe((val:boolean)=>{
+      this.viewSubmission = val;
     })
 
     this.fetchClassData();
@@ -111,10 +129,13 @@ export class CourseComponent implements OnInit {
           graders: this.courseService.getGradersForCourse(params.classId),
           classSize: this.courseService.getNumberOfStudentsForCourse(params.classId),
           roster: this.courseService.getRosterforClass(params.classId),
-          pendingCount: this.courseService.getPendingCount(params.classId)
+          pendingCount: this.courseService.getPendingCount(params.classId),
+          assignments: this.courseService.getAssignmentsForClass(params.classId)
         })
       })
     ).subscribe((data: any) => {
+      this.assignments = data.assignments;
+      this.findNextAssignmentDue();
       this.classInfo = data.classInfo;
       this.classSize = data.classSize;
       this.className = data.classInfo?.class_name;
@@ -124,6 +145,10 @@ export class CourseComponent implements OnInit {
     });
   }
 
+  findNextAssignmentDue(): void {
+    this.nextAssignment = this.assignments.filter((assignment:any)=> moment(assignment.isoDueDate).isAfter(moment()))[0];
+  }
+  
   onAssignmentsGridReady(params: GridReadyEvent) {
     this.refreshAssignmentsData();
     this.gridApi = params.api;
@@ -165,7 +190,7 @@ export class CourseComponent implements OnInit {
   }
 
   refreshSubmissionData(): void {
-    this.submissionRowData$ = this.courseService.getSubmissionsForClass(this.classId!);
+    this.submissionRowData$ = this.courseService.getAllSubmissions(this.user.userId, this.classId);
   }
 
   clearSelection(): void {
@@ -200,6 +225,25 @@ export class CourseComponent implements OnInit {
       }),
       switchMap(() => {
         return this.courseService.checkUserBelongsToCourse(this.user.email, this.classId!);
+      }),
+      switchMap((data:any)=>{
+        return this.courseService.getUser(this.user.email).pipe(
+          tap((res:any)=>{
+            this.user = {...this.user, userId: res.user_id};
+            this.userStorageService.set$(USER_STORAGE.USER, this.user);
+          }),
+          map(()=>{
+            return data;
+          })
+        )
+      }),
+      switchMap((data:any)=>{
+        return this.courseService.getAllSubmissions(this.user.userId, this.classId).pipe(
+          tap((res:any)=> {
+            this.recentSubmission = res[res.length-1];
+          }),
+          map(()=>data)
+        )
       })
     ).subscribe((val: boolean | string) => {
       if (!val) {
