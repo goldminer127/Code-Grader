@@ -22,6 +22,8 @@ export class AssignmentDetailModalComponent implements OnInit {
   calendarDate: any;
   files: any[];
   rubricExist: boolean = false;
+  assignmentDocExist: boolean = false;
+  assignmentDocSignedUrl: any;
   signedUrl: any;
   user: any;
   previousUploaded: boolean = false;
@@ -45,6 +47,17 @@ export class AssignmentDetailModalComponent implements OnInit {
           tap((x: any) => {
             this.rubricExist = x;
             this.signedUrl = x;
+          }),
+          map(()=>{
+            return rowData;
+          })
+        )
+      }),
+      switchMap((rowData:any)=>{
+        return this.s3Service.getAssignmentDoc(rowData.class_id, `${rowData.assignment_id} - ${rowData.assignment_name}`).pipe(
+          tap((x: any) => {
+            this.assignmentDocExist = x;
+            this.assignmentDocSignedUrl = x;
           })
         )
       }),

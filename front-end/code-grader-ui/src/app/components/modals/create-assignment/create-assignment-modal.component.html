@@ -33,6 +33,11 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label for="formFile" class="form-label">Assignment Doc</label>
+                                    <input #assignmentFileInput (change)="onAssignmentFileChange($event)" class="form-control" type="file" id="formFile" [disabled]="createAssignmentFileSuccess">
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="formFile" class="form-label">Assignment Rubric</label>
                                     <input #fileInput (change)="onFileChange($event)" class="form-control" type="file" id="formFile" [disabled]="createSuccess">
                                 </div>
