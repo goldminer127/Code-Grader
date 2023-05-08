@@ -11,6 +11,8 @@
             <select class="form-select form-select-sm" [(ngModel)]="selectedFile" (change)="changeFileClick()" aria-label=".form-select-sm example">
                 <option *ngFor="let file of files" [value]="file.fileName">{{file.fileName}}</option>
             </select>
+            <br/>
+            <app-view-feedback-button></app-view-feedback-button>
         </div>
     </div>
 
@@ -27,3 +29,5 @@
     [modifiedModel]="modifiedModel"
     ></ngx-monaco-diff-editor>
 </div>
+
+<app-view-feedback-modal></app-view-feedback-modal>

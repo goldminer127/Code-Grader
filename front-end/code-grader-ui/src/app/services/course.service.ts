@@ -200,4 +200,28 @@ export class CourseService {
       })
     )
   }
+
+  getAllUngradedClassSubmissions(classId: string) : Observable<any> {
+    return this.http.get(`${BASE_API_URL}/submissions/ungraded/${classId}`).pipe(
+      map((res:any)=> {
+        return res.message.result.map((x:any)=>{
+          return {...x, submitter: `${x.first_name} ${x.last_name}`,submission_date: moment(x.submission_date).format('MMMM Do YYYY, h:mm A'), isoSubmissionDate: x.submission_date}
+        })
+      })
+    )
+  }
+
+  gradeAssignment(grade: string, submissionId: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/assignment/grade`, {
+      submissionId: submissionId,
+      grade: grade
+    })
+  }
+
+  commentAssignment(comments: string, submissionId: string): Observable<any> {
+    return this.http.put(`${BASE_API_URL}/assignment/comment`, {
+      comments: comments,
+      submissionId: submissionId
+    })
+  }
 }

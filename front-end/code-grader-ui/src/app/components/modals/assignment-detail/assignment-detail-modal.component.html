@@ -29,7 +29,7 @@
                         </div>
                         <hr>
 
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between" *ngIf="user?.userRole !== 'student'">
                             <p class="fw-bold">Rubric:</p>
                             <ng-container *ngIf="rubricExist">
                                 <p>
@@ -42,7 +42,7 @@
                                 <p>N/A</p>
                             </ng-container>
                         </div>
-                        <hr>
+                        <hr *ngIf="user?.userRole !== 'student'">
 
                         <div class="d-flex justify-content-between">
                             <p class="fw-bold">Due Date:</p>
@@ -71,7 +71,7 @@
                                         Due Date has passed.
                                     </div>
                                 </ng-container>
-                                <ng-container *ngIf="previousUploaded && !uploadSuccess">
+                                <ng-container *ngIf="previousUploaded && !uploadSuccess && !pastDue">
                                     <div class="pt-3">
                                         <div class="alert alert-warning" role="alert">
                                             Warning: Submission files found. New Submissions will replace these files!
