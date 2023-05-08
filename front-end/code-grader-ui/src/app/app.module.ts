@@ -49,6 +49,7 @@ import { AssignGradeButtonComponent } from './components/modals/assign-grade/ass
 import { AssignGradeModalComponent } from './components/modals/assign-grade/assign-grade-modal.component';
 import { ViewFeedbackModalComponent } from './components/modals/view-feedback/view-feedback-modal.component';
 import { ViewFeedbackButtonComponent } from './components/modals/view-feedback/view-feedback-button.component';
+import { UnderConstructionComponent } from './components/under-construction/under-construction.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { ViewFeedbackButtonComponent } from './components/modals/view-feedback/v
     AssignGradeButtonComponent,
     AssignGradeModalComponent,
     ViewFeedbackModalComponent,
-    ViewFeedbackButtonComponent
+    ViewFeedbackButtonComponent,
+    UnderConstructionComponent
   ],
   imports: [
     BrowserModule,
