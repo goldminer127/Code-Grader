@@ -112,6 +112,7 @@ export class CognitoService {
   public getIdToken(): Observable<any> {
     return from(Auth.currentSession()).pipe(
       map((res:any)=>{
+        console.log("here")
         return res.idToken.jwtToken;
       })
     )
