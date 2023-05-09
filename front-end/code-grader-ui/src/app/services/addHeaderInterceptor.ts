@@ -27,7 +27,9 @@ export class AddHeaderInterceptor implements HttpInterceptor {
             switchMap((idToken: any) => {
                 const clonedRequest = req.clone({ headers: req.headers.append('Authorization', idToken) });
                 return next.handle(clonedRequest).pipe(
-                    tap(() => {},
+                    tap((res:any) => {
+                        console.log("res ", res)
+                    },
                         (err: any) => {
                             console.log("0 ", err)
                             if(err instanceof HttpErrorResponse){
