@@ -15,11 +15,14 @@ import { S3StorageService } from 'src/app/services/s3-storage.service';
 export class CreateAssignmentModalComponent implements OnInit {
   @ViewChild('closeModal') closeModal: ElementRef | undefined;
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
+  @ViewChild('assignmentFileInput') assignmentFileInput: ElementRef | undefined;
 
   isLoading = false;
   createSuccess = false;
+  createAssignmentFileSuccess = false;
   classId: any;
   file: any;
+  assignmentFile: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,6 +46,8 @@ export class CreateAssignmentModalComponent implements OnInit {
 
   closeModalClick(): void {
     this.createSuccess = false;
+    this.createAssignmentFileSuccess = false;
+    this.assignmentFileInput && (this.assignmentFileInput.nativeElement.value = "");
     this.fileInput && (this.fileInput.nativeElement.value = "");
     this.createAssignmentForm.controls.assignmentName.setValue('');
     this.createAssignmentForm.controls.description.setValue('');
@@ -65,12 +70,16 @@ export class CreateAssignmentModalComponent implements OnInit {
             this.s3Service.uploadRubric(this.classId, this.file, `${assignmentId} - ${this.createAssignmentForm.value.assignmentName}`, this.file.name)
           )
 
+          this.assignmentFile && (
+            this.s3Service.uploadAssignmentDoc(this.classId, this.assignmentFile, `${assignmentId} - ${this.createAssignmentForm.value.assignmentName}`, this.assignmentFile.name)
+          )
           return of(true);
         })
       )
       .subscribe(() => {
       this.isLoading = false;
       this.createSuccess = true;
+      this.createAssignmentFileSuccess = true;
       this.gridStorageService.emit$(GRID_STORAGE.refresh, true);
     })
   }
@@ -81,5 +90,9 @@ export class CreateAssignmentModalComponent implements OnInit {
 
   onFileChange(event: any) {
     this.file = event.target.files[0];
+  }
+
+  onAssignmentFileChange(event: any) {
+    this.assignmentFile = event.target.files[0];
   }
 }

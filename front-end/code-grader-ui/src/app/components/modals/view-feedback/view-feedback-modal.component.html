@@ -1,0 +1,43 @@
+<!-- Modal -->
+<ng-container>
+    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div *ngIf="isLoading">
+                <span class="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+                Loading Feedback...
+            </div>
+            <ng-container *ngIf="!isLoading">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">View Feedback</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">Assignment Name:</p>
+                        <p>{{rowData?.assignment_name}}</p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">Grade:</p>
+                        {{rowData?.grade ?? 'Not Graded'}}
+                    </div>
+                    <hr>
+                    <div>
+                        <p class="fw-bold">Comments: </p>
+                        <div>
+                            <textarea class="form-control" [readOnly]="true" [ngModel]="comments" aria-label="With textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    </div>
+</ng-container>

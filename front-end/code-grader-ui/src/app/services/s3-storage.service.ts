@@ -61,6 +61,11 @@ export class S3StorageService {
     return from(Storage.put(`${classId}/${assignment}/Rubric/${fileName}`, file));
   }
 
+  uploadAssignmentDoc(classId: string, file: File, assignment: string, fileName: string): Observable<any> {
+    //Class ID - Assignment ID + Assignment Name - AssignmentDoc - File Name
+    return from(Storage.put(`${classId}/${assignment}/AssignmentDoc/${fileName}`, file));
+  }
+
   uploadSyllabus(classId: string, file: File, fileName: string): Observable<any> {
     return from(Storage.put(`${classId}/Syllabus/${fileName}`, file));
   }
@@ -68,6 +73,15 @@ export class S3StorageService {
   getRubric(classId: string, assignment: string): Observable<any> {
     //Class ID - Assignment ID + Assignment Name - Rubric - File Name
     return from(Storage.list(`${classId}/${assignment}/Rubric`)).pipe(
+      switchMap((data: any) => {
+        return data.results[0]?.key ? from(Storage.get(data?.results[0]?.key)) : of(false)
+      })
+    )
+  }
+
+  getAssignmentDoc(classId: string, assignment: string): Observable<any> {
+    //Class ID - Assignment ID + Assignment Name - AssignmentDoc - File Name
+    return from(Storage.list(`${classId}/${assignment}/AssignmentDoc`)).pipe(
       switchMap((data: any) => {
         return data.results[0]?.key ? from(Storage.get(data?.results[0]?.key)) : of(false)
       })

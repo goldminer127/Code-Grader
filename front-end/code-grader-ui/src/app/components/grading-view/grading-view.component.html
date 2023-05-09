@@ -5,10 +5,14 @@
             <button type="button" class="btn btn-outline-primary" (click)="back()">
                 <i class="bi bi-arrow-left-square"></i> Back
             </button>
+
+            <div class="pt-3">
+                <app-assign-grade-button></app-assign-grade-button>
+            </div>
         </div>
 
         <div>
-            <select class="form-select form-select-sm" [(ngModel)]="selectedFile" (change)="changeFileClick()" aria-label=".form-select-sm example">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedFile" [disabled]="disableSelect" (change)="changeFileClick()" aria-label=".form-select-sm example">
                 <option *ngFor="let file of files" [value]="file.fileName">{{file.fileName}}</option>
             </select>
 
@@ -25,7 +29,7 @@
 
     <div class="d-flex justify-content-around py-3">
         <h4>Student Submission</h4>
-        <h4>Modified Submission</h4>
+        <h4>Modify Submission</h4>
     </div>
 
     <ngx-monaco-diff-editor 
@@ -37,3 +41,5 @@
     (onInit)="onInitDiffEditor($event)"
     ></ngx-monaco-diff-editor>
 </div>
+
+<app-assign-grade-modal></app-assign-grade-modal>

@@ -146,7 +146,7 @@ export class CourseComponent implements OnInit {
           roster: this.courseService.getRosterforClass(params.classId),
           pendingCount: this.courseService.getPendingCount(params.classId),
           assignments: this.courseService.getAssignmentsForClass(params.classId),
-          needsGrading: this.courseService.getAllClassSubmissions(params.classId)
+          needsGrading: this.courseService.getAllUngradedClassSubmissions(params.classId)
         })
       })
     ).subscribe((data: any) => {
@@ -215,7 +215,7 @@ export class CourseComponent implements OnInit {
   }
 
   refreshGradingData(): void {
-    this.gradingRowData$ = this.courseService.getAllClassSubmissions(this.classId);
+    this.gradingRowData$ = this.courseService.getAllUngradedClassSubmissions(this.classId);
   }
 
   refreshSubmissionData(): void {

@@ -109,4 +109,12 @@ export class CognitoService {
     return from(Auth.forgotPasswordSubmit(username, code, newPassword));
   }
 
+  public getIdToken(): Observable<any> {
+    return from(Auth.currentSession()).pipe(
+      map((res:any)=>{
+        return res.idToken.jwtToken;
+      })
+    )
+  }
+
 }

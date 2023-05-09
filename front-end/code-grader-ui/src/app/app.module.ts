@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -45,6 +46,12 @@ import { SubmissionViewComponent } from './components/submission-view/submission
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { GradingViewButtonComponent } from './components/grading-view/grading-view-button.component';
 import { GradingViewComponent } from './components/grading-view/grading-view.component';
+import { AssignGradeButtonComponent } from './components/modals/assign-grade/assign-grade-button.component';
+import { AssignGradeModalComponent } from './components/modals/assign-grade/assign-grade-modal.component';
+import { ViewFeedbackModalComponent } from './components/modals/view-feedback/view-feedback-modal.component';
+import { ViewFeedbackButtonComponent } from './components/modals/view-feedback/view-feedback-button.component';
+import { UnderConstructionComponent } from './components/under-construction/under-construction.component';
+import { AddHeaderInterceptor } from './services/addHeaderInterceptor';
 
 @NgModule({
   declarations: [
@@ -78,7 +85,12 @@ import { GradingViewComponent } from './components/grading-view/grading-view.com
     ViewSubmissionButtonComponent,
     SubmissionViewComponent,
     GradingViewButtonComponent,
-    GradingViewComponent
+    GradingViewComponent,
+    AssignGradeButtonComponent,
+    AssignGradeModalComponent,
+    ViewFeedbackModalComponent,
+    ViewFeedbackButtonComponent,
+    UnderConstructionComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +107,12 @@ import { GradingViewComponent } from './components/grading-view/grading-view.com
     LandingPageStorageService,
     CognitoService,
     UserStorageService,
-    CourseService
+    CourseService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AddHeaderInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

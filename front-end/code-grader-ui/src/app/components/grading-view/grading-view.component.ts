@@ -37,6 +37,9 @@ export class GradingViewComponent implements OnInit {
   modifiedContent: any;
   bucketKeys: string[];
   modifiedButtonLoading = false;
+  disableSelect = false;
+
+  modifiedFileNames: any[] = [];
 
   constructor(
     private gridStorageService: GridStorageService,
@@ -93,8 +96,11 @@ export class GradingViewComponent implements OnInit {
           map((res: any) => {
             return res.results.map((file: any) => file.key);
           }),
-          switchMap((files: any) => {
+          switchMap((files: any) => { //Keys here
             if (files.length > 0) {
+              files.forEach((file:any)=>{
+                this.modifiedFileNames.push(this.getFileName(file));
+              })
               return this.s3Service.fetchFilesForAssignment(files)
             } else {
               return of([]);
@@ -119,7 +125,7 @@ export class GradingViewComponent implements OnInit {
               const x = fileText.map((text: string, index: number) => {
                 return {
                   text: text,
-                  fileName: this.fileNames[index]
+                  fileName: this.modifiedFileNames[index]
                 }
               })
 
@@ -176,7 +182,6 @@ export class GradingViewComponent implements OnInit {
     this.originalModel = { ...this.originalModel, code: this.files.find((file: any) => file.fileName === this.selectedFile).text, language: lang.toString().toLowerCase() }
     
     const matchingFile = this.modifiedFiles.find((file:any)=> file.fileName === this.selectedFile);
-
     if(matchingFile){
       this.modifiedModel = {...this.modifiedModel, code: matchingFile.text, language: this.getLanguageFromFileExtension()}
     }else{
@@ -186,9 +191,9 @@ export class GradingViewComponent implements OnInit {
 
   saveModification(): void {
     this.modifiedButtonLoading = true;
+    this.disableSelect = true;
 
     const modifiedFile = this.modifiedFiles.find((file:any)=> file.fileName === this.selectedFile);
-    
     if(modifiedFile){
       modifiedFile.text = this.modifiedContent;
     }else{
@@ -207,15 +212,15 @@ export class GradingViewComponent implements OnInit {
 
     let blob = new Blob([this.modifiedContent], { type: fileExt })
     const file = new File([blob], this.addModifiedToFilename(originalFile));
-
     this.s3Service.uploadModifiedAssignment(
       this.rowData.classInfo.class_id,
       `${this.rowData.user_id}`,
       `${this.rowData.assignment_id} - ${this.rowData.assignment_name}`,
       this.selectedFile,
       file
-    ).subscribe((res: any) => {
+    ).subscribe(() => {
       this.modifiedButtonLoading = false;
+      this.disableSelect = false;
     })
 
   }
