@@ -5,7 +5,7 @@ import {
     HttpRequest,
     HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, catchError, switchMap, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CognitoService } from './cognito.service';
 import { Router } from '@angular/router';
@@ -27,22 +27,35 @@ export class AddHeaderInterceptor implements HttpInterceptor {
             switchMap((idToken: any) => {
                 const clonedRequest = req.clone({ headers: req.headers.append('Authorization', idToken) });
                 return next.handle(clonedRequest).pipe(
-                    tap((res:any) => {
-                        console.log("res ", res)
-                    },
-                        (err: any) => {
-                            console.log("0 ", err)
-                            if(err instanceof HttpErrorResponse){
-                                console.log("1 ", err)
-                                if(err.status === 401){
-                                    console.log("2 ", err)
-                                    this.cognitoService.signOut();
-                                    this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
-                                    this.router.navigate([''])
-                                }
+                    catchError((err: any) => {
+                        if (err instanceof HttpErrorResponse) {
+                            console.log("1 ", err)
+                            if (err.status === 401) {
+                                console.log("2 ", err)
+                                this.cognitoService.signOut();
+                                this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
+                                this.router.navigate([''])
                             }
                         }
-                    )
+
+                        return new Observable<HttpEvent<any>>();
+                    })
+                    // tap((res:any) => {
+                    //     console.log("res ", res)
+                    // },
+                    //     (err: any) => {
+                    //         console.log("0 ", err)
+                    //         if(err instanceof HttpErrorResponse){
+                    //             console.log("1 ", err)
+                    //             if(err.status === 401){
+                    //                 console.log("2 ", err)
+                    //                 this.cognitoService.signOut();
+                    //                 this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
+                    //                 this.router.navigate([''])
+                    //             }
+                    //         }
+                    //     }
+                    // )
                 )
             })
         )
