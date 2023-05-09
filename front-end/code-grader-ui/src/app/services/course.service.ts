@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { BASE_API_URL, PILLS } from '../app.constants';
 import { courseMapper } from './mappers/courses.mapper';
 import { UserService } from './user.service';

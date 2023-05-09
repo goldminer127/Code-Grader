@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -50,6 +51,7 @@ import { AssignGradeModalComponent } from './components/modals/assign-grade/assi
 import { ViewFeedbackModalComponent } from './components/modals/view-feedback/view-feedback-modal.component';
 import { ViewFeedbackButtonComponent } from './components/modals/view-feedback/view-feedback-button.component';
 import { UnderConstructionComponent } from './components/under-construction/under-construction.component';
+import { AddHeaderInterceptor } from './services/addHeaderInterceptor';
 
 @NgModule({
   declarations: [
@@ -105,7 +107,12 @@ import { UnderConstructionComponent } from './components/under-construction/unde
     LandingPageStorageService,
     CognitoService,
     UserStorageService,
-    CourseService
+    CourseService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AddHeaderInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

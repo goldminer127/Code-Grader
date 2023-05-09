@@ -18,12 +18,12 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-between">
                         <p class="fw-bold">Assignment Name:</p>
-                        <p>{{rowData.assignment_name}}</p>
+                        <p>{{rowData?.assignment_name}}</p>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
                         <p class="fw-bold">Grade:</p>
-                        {{rowData.grade ?? 'Not Graded'}}
+                        {{rowData?.grade ?? 'Not Graded'}}
                     </div>
                     <hr>
                     <div>
