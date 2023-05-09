@@ -31,7 +31,8 @@ export class CognitoService {
         given_name: user.firstName,
         family_name: user.lastName,
       }
-    })).pipe(
+    }))
+    .pipe(
       switchMap(()=>{
         return this.userService.createUser(
           user.firstName,

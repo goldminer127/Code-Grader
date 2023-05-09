@@ -59,7 +59,6 @@ export class SignupComponent implements OnInit {
 
     this.errorMessage = null;
     this.isLoading = true;
-
     this.cognitoService.signUp(signUpUser).subscribe(() => {
       this.isLoading = false;
 
@@ -74,7 +73,6 @@ export class SignupComponent implements OnInit {
       )
     },
       err => {
-
         if(err.code === 'UsernameExistsException'){
           this.emailAlreadyExist = true;
         }else{

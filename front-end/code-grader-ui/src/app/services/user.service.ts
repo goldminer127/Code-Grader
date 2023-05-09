@@ -12,12 +12,14 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  createUser(firstName : string, lastName : string, email : string): Observable<any> {
+  createUser(firstName: string, lastName: string, email: string): Observable<any> {
     return this.http.put(`${BASE_API_URL}/user`, {
       firstName: firstName,
       lastName: lastName,
-      email: email
-    })
+      email: email,
+      skip: true
+    }
+    )
   }
 
   getUserInfo(email: string): Observable<any> {
