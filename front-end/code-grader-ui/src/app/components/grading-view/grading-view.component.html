@@ -12,7 +12,7 @@
         </div>
 
         <div>
-            <select class="form-select form-select-sm" [(ngModel)]="selectedFile" (change)="changeFileClick()" aria-label=".form-select-sm example">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedFile" [disabled]="disableSelect" (change)="changeFileClick()" aria-label=".form-select-sm example">
                 <option *ngFor="let file of files" [value]="file.fileName">{{file.fileName}}</option>
             </select>
 
