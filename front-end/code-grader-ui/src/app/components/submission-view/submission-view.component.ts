@@ -39,6 +39,8 @@ export class SubmissionViewComponent implements OnInit {
   bucketKeys: string[];
   modifiedButtonLoading = false;
 
+  modifiedFileNames: any[] = [];
+
   constructor(
     private gridStorageService: GridStorageService,
     private s3Service: S3StorageService,
@@ -96,6 +98,9 @@ export class SubmissionViewComponent implements OnInit {
           }),
           switchMap((files: any) => {
             if(files.length > 0 ){
+              files.forEach((file:any)=>{
+                this.modifiedFileNames.push(this.getFileName(file));
+              })
               return this.s3Service.fetchFilesForAssignment(files)
             }else{
               return of([]);
@@ -120,7 +125,7 @@ export class SubmissionViewComponent implements OnInit {
               const x = fileText.map((text: string, index: number) => {
                 return {
                   text: text,
-                  fileName: this.fileNames[index]
+                  fileName: this.modifiedFileNames[index]
                 }
               })
       
