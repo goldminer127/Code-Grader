@@ -29,8 +29,11 @@ export class AddHeaderInterceptor implements HttpInterceptor {
                 return next.handle(clonedRequest).pipe(
                     tap(() => {},
                         (err: any) => {
+                            console.log("0 ", err)
                             if(err instanceof HttpErrorResponse){
+                                console.log("1 ", err)
                                 if(err.status === 401){
+                                    console.log("2 ", err)
                                     this.cognitoService.signOut();
                                     this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
                                     this.router.navigate([''])
