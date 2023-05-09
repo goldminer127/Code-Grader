@@ -26,37 +26,24 @@ export class AddHeaderInterceptor implements HttpInterceptor {
         return this.cognitoService.getIdToken().pipe(
             switchMap((idToken: any) => {
                 const clonedRequest = req.clone({ headers: req.headers.append('Authorization', idToken) });
-                return next.handle(clonedRequest).pipe(
-                    catchError((err: any) => {
-                        if (err instanceof HttpErrorResponse) {
-                            console.log("1 ", err)
-                            if (err.status === 401) {
-                                console.log("2 ", err)
-                                this.cognitoService.signOut();
-                                this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
-                                this.router.navigate([''])
-                            }
-                        }
+                return next.handle(clonedRequest);
+                // tap((res:any) => {
+                //     console.log("res ", res)
+                // },
+                //     (err: any) => {
+                //         console.log("0 ", err)
+                //         if(err instanceof HttpErrorResponse){
+                //             console.log("1 ", err)
+                //             if(err.status === 401){
+                //                 console.log("2 ", err)
+                //                 this.cognitoService.signOut();
+                //                 this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
+                //                 this.router.navigate([''])
+                //             }
+                //         }
+                //     }
+                // )
 
-                        return new Observable<HttpEvent<any>>();
-                    })
-                    // tap((res:any) => {
-                    //     console.log("res ", res)
-                    // },
-                    //     (err: any) => {
-                    //         console.log("0 ", err)
-                    //         if(err instanceof HttpErrorResponse){
-                    //             console.log("1 ", err)
-                    //             if(err.status === 401){
-                    //                 console.log("2 ", err)
-                    //                 this.cognitoService.signOut();
-                    //                 this.landingPageStorageService.set$(LANDING_PAGE_STORAGE.currentState, LANDING_PAGE_STATE.DEFAULT);
-                    //                 this.router.navigate([''])
-                    //             }
-                    //         }
-                    //     }
-                    // )
-                )
             })
         )
     }
